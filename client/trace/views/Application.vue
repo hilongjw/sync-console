@@ -2,6 +2,7 @@
 .rd-console-app {
     display: flex;
     height: 100%;
+    width: calc(100vw - 150px);
 }
 .rd-console-app-navs {
     background: #f7f7f7;
@@ -45,7 +46,10 @@
 <template>
     <div class="rd-console-view rd-console-app">
         <div class="rd-console-app-navs ">
-            <div class="rd-console-app-nav hover-black">Local Storage</div>
+            <div class="rd-console-app-nav hover-black" 
+                @click="touchNav(nav)" 
+                v-for="nav in navs"
+            >{{ nav.text }}</div>
         </div>
         <div class="rd-console-app-container">
             <div class="rd-console-app-table">
@@ -84,21 +88,37 @@ import clipboard from 'clipboard-js'
 export default {
     data () {
         return {
+            navs: [{
+                text: 'LocalStorage',
+                type: 'localStorage'
+            }, {
+                text: 'cookie',
+                type: 'cookie'
+            }, {
+                text: 'sessionStorage',
+                type: 'sessionStorage'
+            }],
             list: []
         }
     },
     mounted () {
-        this.init()
+        this.initStorage('localStorage')
     },
     methods: {
-        init () {
-            if (!window && !window.localStorage) return
-            this.list = Object.keys(window.localStorage).map(key => {
+        initStorage (storage) {
+            if (!window && !window[storage]) return
+            this.list = Object.keys(window[storage]).map(key => {
                 return {
                     key: key,
-                    val: window.localStorage[key]
+                    val: window[storage][key]
                 }
             })
+        },
+        initCookie () {
+            this.list = [{
+                key: 'cookie',
+                value: window.document.cookie
+            }]
         },
         copy (val) {
             const str = JSON.stringify(val)
@@ -110,6 +130,19 @@ export default {
                 this.$snack('copy failed')
                 console.error(err)
             })
+        },
+        touchNav (nav) {
+            switch (nav.type) {
+                case 'localStorage':
+                    this.initStorage('localStorage')
+                    break
+                case 'cookie':
+                    this.initCookie()
+                    break
+                case 'sessionStorage':
+                    this.initStorage('sessionStorage')
+                    break
+            }
         }
     }
 }

@@ -17,6 +17,14 @@
     color: #fff;
     cursor: pointer;
 }
+.rd-console-header-close {
+    position: absolute;
+    right: 0px;
+    top: 0;
+    font-size: 16px;
+    line-height: 26px;
+    width: 20px;
+}
 .rd-console-header-actions {
     display: flex;
 }
@@ -49,6 +57,9 @@
     <div v-if="state.show" class="rd-console" :style="{ height: size.height + 'px' }">
         <div class="rd-console-header" @mousedown="resizeStart" @touchstart="resizeStart">
             <ActionTab :tabs="tabs"></ActionTab>
+            <div class="rd-console-header-close" @click="hide">
+                ×
+            </div>
         </div>
         <div class="rd-console-body">
             <router-view></router-view>

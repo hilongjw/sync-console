@@ -1,7 +1,6 @@
 <style>
 .json-view {
     color: #333;
-    margin-right: 10px;
 }
 .json-view-children .json-view {
     display: block;

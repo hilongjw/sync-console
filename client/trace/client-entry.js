@@ -45,3 +45,5 @@ class LogDash {
 }
 
 const logger = new LogDash()
+
+export default logger
