@@ -20,6 +20,7 @@
     border-radius: 8px;
     overflow: hidden;
     opacity: 1;
+    background: #fff;
 }
 .hover-black:hover {
     background: rgba(0, 0, 0, 0.15);

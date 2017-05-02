@@ -10,11 +10,14 @@ export default class LogManager {
         return this.LogQueue
     }
 
-    writeLocal () {
-        if (this.LogQueue.length > 100) {
-            this.LogQueue.shift()
+    writeLocal (log) {
+        if (this.historyQueue.length > 100) {
+            this.historyQueue.shift()
         }
-        const str = JSON.stringify(this.LogQueue)
+        this.historyQueue.push(log)
+        this.LogQueue.push(log)
+        
+        const str = JSON.stringify(this.historyQueue)
         localStorage['LogManager'] = str
     }
 
@@ -35,13 +38,12 @@ export default class LogManager {
         methods.map(method => {
             let old = console[method]
             console[method] = (...args) => {
-                this.LogQueue.push({
+                this.writeLocal({
                     id: this.logIndex++,
                     type: method,
                     date: Date.now(),
                     args: args
                 })
-                this.writeLocal()
                 old.apply(console, args)
             }
             

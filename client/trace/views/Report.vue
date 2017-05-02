@@ -16,7 +16,7 @@ export default {
     },
     methods: {
         report () {
-            console.log('report sucesss')
+           this.$snack('report success')
         }
     }
 }

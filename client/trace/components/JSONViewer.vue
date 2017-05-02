@@ -144,9 +144,10 @@ const JSONViewer = {
         }
 
         if (this.show) {
-            childNodes = Object.keys(this.data).map(key => {
-                return renderVal(h, this.data[key], key)
-            })
+            childNodes = []
+            for (let key in this.data) {
+                childNodes.push(renderVal(h, this.data[key], key))
+            }
         }
 
         return <div class={{ 'json-view': true, 'light': this.light }} onClick={ this.toggle }>

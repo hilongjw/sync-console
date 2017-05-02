@@ -27,7 +27,7 @@
      display: flex;
      line-height: 1.7;
      padding: 5px 10px;
-     border-bottom: 1px solid #ccc;
+     border-bottom: 1px solid #f2f2f2;
 }
 .rd-console-app-table-key,
 .rd-console-app-table-hd-key {
@@ -58,7 +58,12 @@
                     </div>
                 </div>
                 <div class="rd-console-app-table-body">
-                    <div class="rd-console-app-table-row" v-for="row in list">
+                    <div 
+                        class="rd-console-app-table-row" 
+                        @click="copy(row.val)" 
+                        :key="row.key"
+                        v-for="row in list"
+                    >
                         <div class="rd-console-app-table-key">
                             {{ row.key }}
                         </div>
@@ -74,28 +79,12 @@
 </template>
 
 <script>
+import clipboard from 'clipboard-js'
+
 export default {
     data () {
         return {
-            list: [{
-                key: 'asdasd',
-                val: 'asdasdasdasd'
-            }, {
-                key: 'asdasd',
-                val: 'asdasdasdasd'
-            }, {
-                key: 'asdasd',
-                val: 'asdasdasdasd'
-            }, {
-                key: 'asdasd',
-                val: 'asdasdasdasd'
-            }, {
-                key: 'asdasd',
-                val: 'asdasdasdasd'
-            }, {
-                key: 'asdasd',
-                val: 'asdasdasdasd'
-            }]
+            list: []
         }
     },
     mounted () {
@@ -109,6 +98,17 @@ export default {
                     key: key,
                     val: window.localStorage[key]
                 }
+            })
+        },
+        copy (val) {
+            const str = JSON.stringify(val)
+            clipboard.copy(str)
+            .then(() => {
+                this.$snack('copy success')
+            })
+            .catch(err => {
+                this.$snack('copy failed')
+                console.error(err)
             })
         }
     }

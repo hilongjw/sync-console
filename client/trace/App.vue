@@ -1,4 +1,9 @@
 <style>
+#rdLog {
+    background: red;
+    height: 100px;
+    width: 100px;
+}
 .rd-console {
     position: fixed;
     bottom: 0;
@@ -7,7 +12,7 @@
     width: 100%;
 }
 .rd-console-header {
-    background: #8BC34A;
+    background: #673AB7;
     font-size: 13px;
     color: #fff;
     cursor: pointer;
@@ -17,9 +22,10 @@
 }
 .rd-console-body {
     position: absolute;
+    background: #fff;
     width: 100%;
     left: 0;
-    top: 30px;
+    top: 27px;
     bottom: 0;
     font-size: 13px;
     overflow-y: auto;
@@ -40,8 +46,8 @@
 </style>
 
 <template>
-    <div class="rd-console" :style="{ height: state.height + 'px' }">
-        <div class="rd-console-header" @mousedown="mousedown" @touchstart="mousedown">
+    <div v-if="state.show" class="rd-console" :style="{ height: size.height + 'px' }">
+        <div class="rd-console-header" @mousedown="resizeStart" @touchstart="resizeStart">
             <ActionTab :tabs="tabs"></ActionTab>
         </div>
         <div class="rd-console-body">
@@ -78,10 +84,13 @@ function getPointerPosition (e) {
 export default {
     data () {
         return {
-            state: {
+            size: {
                 scale: false,
                 clientY: 0,
-                height: 300
+                height: 300 
+            },
+            state: {
+                show: true
             },
             tabs: [{
                 text: 'Console',
@@ -108,35 +117,48 @@ export default {
     },
     mounted () {
         this.$router.push({ name: 'console' })
-        window.addEventListener('mouseup', this.mouseup)
-        window.addEventListener('mousemove', this.mousemove)
 
-        window.addEventListener('touchmove', this.mousemove)
-        window.addEventListener('touchend', this.mouseup)
+        window.addEventListener('mouseup', this.resizeEnd)
+        window.addEventListener('mousemove', this.resizing)
+        window.addEventListener('touchmove', this.resizing)
+        window.addEventListener('touchend', this.resizeEnd)
+    },
+    beforeDestroy () {
+        window.removeEventListener('mouseup', this.resizeEnd)
+        window.removeEventListener('mousemove', this.resizing)
+        window.removeEventListener('touchmove', this.resizing)
+        window.removeEventListener('touchend', this.resizeEnd)
     },
     methods: {
-        mousedown (e) {
-            this.state.scacle = true
+        show () {
+            this.state.show = true
+        },
+        hide () {
+            this.state.show = false
+        },
+        resizeStart (e) {
+            this.size.scacle = true
             const pointer = getPointerPosition(e)
 
             if (!pointer) return
-            this.state.y = pointer.y
+            this.size.y = pointer.y
         },
-        mouseup (e) {
-             this.state.scacle = false
+        resizeEnd (e) {
+             this.size.scacle = false
         },
-        mousemove (e) {
-            if (!this.state.scacle) return
+        resizing (e) {
+            if (!this.size.scacle) return
             const pointer = getPointerPosition(e)
             if (!pointer) return
+            e.stopPropagation()
 
-            const delta = this.state.y - pointer.y
+            const delta = this.size.y - pointer.y
 
-            this.state.height += delta
-            this.state.y = pointer.y
+            this.size.height += delta
+            this.size.y = pointer.y
 
-            if (this.state.height < 30) this.state.height = 30
-            if (this.state.height > window.innerHeight) this.state.height = window.innerHeight
+            if (this.size.height < 30) this.size.height = 30
+            if (this.size.height > window.innerHeight) this.size.height = window.innerHeight
         }
     }
 }
