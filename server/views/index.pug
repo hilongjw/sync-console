@@ -1,0 +1,10 @@
+doctype html
+html(
+    lang="zh-CN"
+)
+    include components/head.pug
+    body
+        div#app
+        script(src='/client/vendor' + "-" + hash + '.js')
+        script(src='/client/trace-' + hash + '.js')
+        script(src='/client/' + bundle + "-" + hash + '.js')
