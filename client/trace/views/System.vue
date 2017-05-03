@@ -2,7 +2,7 @@
 .rd-console-app {
     display: flex;
     height: 100%;
-    width: 100vw;
+    width: calc(100vw - 150px);
 }
 .rd-console-app-navs {
     background: #f7f7f7;
@@ -44,13 +44,7 @@
 }
 </style>
 <template>
-    <div class="rd-console-view rd-console-app">
-        <div class="rd-console-app-navs ">
-            <div class="rd-console-app-nav hover-black" 
-                @click="touchNav(nav)" 
-                v-for="nav in navs"
-            >{{ nav.text }}</div>
-        </div>
+    <div class="rd-console-view rd-console-system">
         <div class="rd-console-app-container">
             <div class="rd-console-app-table">
                 <div class="rd-console-app-table-header">
@@ -84,42 +78,21 @@
 
 <script>
 import clipboard from 'clipboard-js'
+import SystemInfo from '../lib/system'
+import { getObjAllKeys } from '../utils'
 
 export default {
     data () {
         return {
-            navs: [{
-                text: 'LocalStorage',
-                type: 'localStorage'
-            }, {
-                text: 'cookie',
-                type: 'cookie'
-            }, {
-                text: 'sessionStorage',
-                type: 'sessionStorage'
-            }],
             list: []
         }
     },
     mounted () {
-        this.initStorage('localStorage')
+        SystemInfo.info((err, data) => {
+            this.init(data)
+        })
     },
     methods: {
-        initStorage (storage) {
-            if (!window && !window[storage]) return
-            this.list = Object.keys(window[storage]).map(key => {
-                return {
-                    key: key,
-                    val: window[storage][key]
-                }
-            })
-        },
-        initCookie () {
-            this.list = [{
-                key: 'cookie',
-                value: window.document.cookie
-            }]
-        },
         copy (val) {
             const str = JSON.stringify(val)
             clipboard.copy(str)
@@ -131,18 +104,13 @@ export default {
                 console.error(err)
             })
         },
-        touchNav (nav) {
-            switch (nav.type) {
-                case 'localStorage':
-                    this.initStorage('localStorage')
-                    break
-                case 'cookie':
-                    this.initCookie()
-                    break
-                case 'sessionStorage':
-                    this.initStorage('sessionStorage')
-                    break
-            }
+        init (data) {
+            this.list = getObjAllKeys(data).map(key => {
+                return {
+                    key: key,
+                    val: data[key]
+                }
+            })
         }
     }
 }

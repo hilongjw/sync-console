@@ -5,6 +5,7 @@
     font-size: 13px;
     padding: 0 10px;
     border-bottom: 1px solid #f1f1f1;
+    box-sizing: border-box;
 }
 .rd-console-item.rd-log-type-error {
     background: #fff0f0;
@@ -27,7 +28,6 @@
 </template>
 
 <script>
-import TypeViewer from './TypeViewer.vue'
 import JSONViewer from './JSONViewer.vue'
 
 const logClassMap = {
@@ -51,7 +51,6 @@ export default {
         }
     },
     components: {
-        TypeViewer,
         JSONViewer
     }
 }

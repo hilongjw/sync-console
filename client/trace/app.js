@@ -4,13 +4,12 @@ import router from './router'
 import store from './store'
 
 import snackbar from './lib/snack'
-import LogManager from './lib/log-manager'
-
-const logManager = new LogManager()
-
-window.logManager = logManager
 
 Vue.use(snackbar)
+
+const el = document.createElement('div')
+
+document.body.appendChild(el)
 
 const app = new Vue({
     serverCacheKey: () => 'Console',
@@ -18,5 +17,7 @@ const app = new Vue({
     store,
     ...App
 })
+
+app.$mount(el)
 
 export { app }

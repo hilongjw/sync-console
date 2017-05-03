@@ -1,9 +1,4 @@
 <style>
-#rdLog {
-    background: red;
-    height: 100px;
-    width: 100px;
-}
 .rd-console {
     position: fixed;
     bottom: 0;
@@ -15,6 +10,7 @@
     background: #673AB7;
     font-size: 13px;
     color: #fff;
+    padding-right: 30px;
     cursor: pointer;
 }
 .rd-console-header-close {
@@ -33,7 +29,7 @@
     background: #fff;
     width: 100%;
     left: 0;
-    top: 27px;
+    top: 32px;
     bottom: 0;
     font-size: 13px;
     overflow-y: auto;
@@ -112,6 +108,10 @@ export default {
                 router: { name: 'history' },
                 active: false
             }, {
+                text: 'System',
+                router: { name: 'system' },
+                active: false
+            }, {
                 text: 'Application',
                 router: { name: 'application' },
                 active: false
@@ -133,6 +133,10 @@ export default {
         window.addEventListener('mousemove', this.resizing)
         window.addEventListener('touchmove', this.resizing)
         window.addEventListener('touchend', this.resizeEnd)
+
+        window.logManager.evalCommand('({ b: 1, a: [1,2,3] })')
+
+        b = a
     },
     beforeDestroy () {
         window.removeEventListener('mouseup', this.resizeEnd)

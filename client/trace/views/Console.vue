@@ -1,20 +1,22 @@
 <template>
     <div class="rd-console-view">
-        <Log :key="log.id" :log="log" v-for="log in logManager.LogQueue"></Log>
+        <Log :key="log.id" :log="log" v-for="log in logQueue"></Log>
     </div>
 </template>
 
 <script>
 import Log from '../components/LogViewer.vue'
-
 export default {
     data () {
         return {
-            logManager: window.logManager
+            logQueue: window.logManager.logQueue
         }
     },
     components: {
         Log
+    },
+    mounted () {
+
     }
 }
 </script>

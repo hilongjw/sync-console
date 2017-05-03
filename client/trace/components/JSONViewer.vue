@@ -1,6 +1,7 @@
 <style>
 .json-view {
     color: #333;
+    word-break: break-all;
 }
 .json-view-children .json-view {
     display: block;

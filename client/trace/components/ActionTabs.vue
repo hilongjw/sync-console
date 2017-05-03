@@ -1,6 +1,7 @@
 <style>
 .rd-console-header-actions {
     display: flex;
+    overflow-x: auto;
 }
 </style>
 
