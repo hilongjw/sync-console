@@ -7,17 +7,22 @@ import snackbar from './lib/snack'
 
 Vue.use(snackbar)
 
-const el = document.createElement('div')
 
-document.body.appendChild(el)
+function install (logManager) {
+    const el = document.createElement('div')
+    document.body.appendChild(el)
 
-const app = new Vue({
-    serverCacheKey: () => 'Console',
-    router,
-    store,
-    ...App
-})
+    const app = new Vue({
+        serverCacheKey: () => 'Console',
+        router,
+        store,
+        ...App
+    })
 
-app.$mount(el)
+    app.$logManager = logManager
+    app.$mount(el)
+    return app
+}
 
-export { app }
+
+export { install }

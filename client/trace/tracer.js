@@ -1,5 +1,5 @@
 
-import LogManager from './lib/log-manager'
+import LogManager from './lib/log-cat'
 
 
 const el = document.createElement('div')
@@ -26,7 +26,8 @@ class LogTracer {
 
         this.logManager = new LogManager({
             maxLogCount: this.options.maxLogCount,
-            report: this.options.report
+            report: this.options.report,
+            socket: this.options.socket
         })
 
         if (options.Vue) {
@@ -34,8 +35,6 @@ class LogTracer {
                 this.logManager.errorHandler(arguments)
             }).bind(this)
         }
-
-        window.logManager = this.logManager
 
         const el = window.document.body.querySelector(this.options.el)
 
@@ -69,7 +68,7 @@ class LogTracer {
         // for async load log ui
         import('./app')
             .then(module => {
-                const app = module.app
+                const app = module.install(this.logManager)
                 app.show()
             })
     }

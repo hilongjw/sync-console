@@ -18,6 +18,8 @@ const SystemInfo = {
         let ipad = ua.match(/(ipad).*\s([\d_]+)/i)
         let iphone = ua.match(/(iphone)\sos\s([\d_]+)/i)
         let android = ua.match(/(android)\s([\d\.]+)/i)
+        let chrome = ua.match(/(chrome)\/([\d\.]+)/i)
+        let safari = ua.match(/(safari)\/([\d\.]+)/i)
 
         if (android) {
           system = 'Android ' + android[2]
@@ -27,6 +29,10 @@ const SystemInfo = {
           system = 'iPad, iOS ' + ipad[2].replace(/_/g, '.')
         } else if (ipod) {
           system = 'iPod, iOS ' + ipod[2].replace(/_/g, '.')
+        } else if (chrome) {
+          system = 'Chrome ' + chrome[2].replace(/_/g, '.')
+        } else if (safari) {
+          system = 'Safari ' + safari[2].replace(/_/g, '.')
         }
 
         return system

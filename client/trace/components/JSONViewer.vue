@@ -9,6 +9,9 @@
 .json-view-val .json-view {
     display: inline;
 }
+.json-view .json-view-simple {
+    display: block;
+}
 .json-view.light .json-view {
     background: none;
     color: #fff;
@@ -53,7 +56,7 @@ import getType from '../lib/get-type'
 
 function simpleRender (h, val, cls, key) {
     if (key) {
-        return <span class="json-view">
+        return <span class="json-view json-view-simple">
             <span class="json-view-key">{ key }</span>
             <span class="json-view-split">:</span>
             <span class={ cls }> {val } </span>
@@ -148,14 +151,13 @@ const JSONViewer = {
             for (let key in this.data) {
                 childNodes.push(renderVal(h, this.data[key], key))
             }
+            if (!childNodes.length) childNodes = JSON.stringify(this.data)
         }
 
         return <div class={{ 'json-view': true, 'light': this.light }} onClick={ this.toggle }>
-            { dataType }
-            <div>
-                <div class="json-view-children">
-                { childNodes }
-                </div>
+            <i>{ dataType }</i>
+            <div class="json-view-children">
+            { childNodes }
             </div>
         </div>
 

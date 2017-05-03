@@ -10,7 +10,7 @@ import Log from '../components/LogViewer.vue'
 export default {
     data () {
         return {
-            logManager: window.logManager
+            logManager: this.$root.$logManager
         }
     },
     components: {

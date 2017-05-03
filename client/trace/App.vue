@@ -119,6 +119,10 @@ export default {
                 text: 'Report',
                 router: { name: 'report' },
                 active: false
+            }, {
+                text: 'Remote',
+                router: { name: 'remote' },
+                active: false
             }]
         }
     },
@@ -134,9 +138,7 @@ export default {
         window.addEventListener('touchmove', this.resizing)
         window.addEventListener('touchend', this.resizeEnd)
 
-        window.logManager.evalCommand('({ b: 1, a: [1,2,3] })')
-
-        b = a
+        console.log({ a: [1,2,3], b: { a: { b: { a: 1, b: [], v: {} } } } })
     },
     beforeDestroy () {
         window.removeEventListener('mouseup', this.resizeEnd)

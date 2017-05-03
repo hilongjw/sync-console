@@ -5,6 +5,7 @@ import History from '../views/History.vue'
 import Application from '../views/Application.vue'
 import Report from '../views/Report.vue'
 import SystemView from '../views/System.vue'
+import Remote from '../views/Remote.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,10 @@ const routes = [
         path: '/system',
         name: 'system',
         component: SystemView
+    }, {
+        path: '/remote',
+        name: 'remote',
+        component: Remote
     }
 ]
 

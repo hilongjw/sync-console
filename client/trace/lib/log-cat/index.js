@@ -1,11 +1,13 @@
-import SystemInfo from './system'
-import { getRandomKey } from '../utils'
+import SystemInfo from '../system'
+import { getRandomKey, isFunction } from '../../utils'
+import IO from 'socket.io-client'
 
 export default class LogManager {
     constructor (props) {
         this.options = {
             maxLogCount: props.maxLogCount || 50,
-            report: props.report
+            report: props.report,
+            socket: props.socket
         }
 
         this.logQueue = []
@@ -17,7 +19,20 @@ export default class LogManager {
         SystemInfo.info((err, data) => {
             this.system = data
         })
+
         this.mock(['log', 'error', 'warn'])
+
+        this.socket = IO.connect(this.options.socket)
+
+        this.socket.on('connect', () => {
+            this.socket.emit('regist', {
+                system: this.system
+            })
+
+            this.socket.on('run-code', (data) => {
+                this.execCommand(data.code)
+            })
+        })
     }
 
     toJSON () {
@@ -25,6 +40,7 @@ export default class LogManager {
     }
 
     errorHandler (error, vm, info) {
+        console.debug(error, vm)
         this.report({
             message: error.message,
             stack: error.stack,
@@ -59,6 +75,8 @@ export default class LogManager {
         this.historyQueue.push(log)
         this.logQueue.push(log)
 
+        this.socket.emit('run-code-callback', log)
+
         clearTimeout(this.timer)
         this.timer = setTimeout(this.save.bind(this), 100)
     }
@@ -81,7 +99,7 @@ export default class LogManager {
         return queue
     }
 
-    evalCommand (code) {
+    execCommand (code) {
         console.log(code)
         try {
             let result = eval(code)
@@ -107,6 +125,7 @@ export default class LogManager {
 
     mockOnError () {
         this.windowOnError = window.onerror
+        
         window.onerror = (message, source, lineNo, colNo, error) => {
             const err = {
                 message: message,
@@ -121,7 +140,11 @@ export default class LogManager {
 
             this.report(err)
 
-            this.windowOnError.call(window, message, source, lineNo, colNo, error)
+            console.error(message, ' source: ' + source + ' lineNo: ' + lineNo + ' colNo: '+ colNo + ' ', error)
+
+            if (isFunction(this.windowOnError)) {
+                this.windowOnError.call(window, message, source, lineNo, colNo, error)
+            }
         }
     }
 

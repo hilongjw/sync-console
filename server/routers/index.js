@@ -10,9 +10,23 @@ function index (ctx) {
     )
 }
 
+function dash (ctx) {
+    ctx.body = render('dash',
+        {
+            title: 'dash',
+            bundle: 'dash',
+            hash: WEBPACK_HASH
+        }
+    )
+}
+
 module.exports = {
     '/': {
         method: 'get',
         handler: index
+    },
+    '/dash': {
+        method: 'get',
+        handler: dash
     }
 }

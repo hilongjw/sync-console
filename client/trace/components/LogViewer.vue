@@ -1,6 +1,5 @@
 <style>
 .rd-console-item {
-    display: flex;
     line-height: 1.7;
     font-size: 13px;
     padding: 0 10px;

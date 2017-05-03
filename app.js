@@ -50,6 +50,68 @@ if (isDev.test(NODE_ENV)) {
 
 const server = app.listen(Config.PORT)
 
+const io = require('socket.io')(server)
+const logTrace = io.of('/log')
+
+const onlineClientQueue = {
+    queue: [],
+    add (client) {
+        logTrace.emit('add-client', {
+            id: client.id,
+            system: client.data.system
+        })
+        this.queue.push(client)
+    },
+    remove (client) {
+        console.log('start remove', this.queue.length)
+        this.queue.map((c, i) => {
+            if (c === client || c.id === client.id) {
+                this.queue.splice(i, 1)
+            }
+        })
+        logTrace.emit('remove-client', {
+            id: client.id
+        })
+        console.log('removed', this.queue.length)
+    }
+}
+
+
+
+logTrace.on('connection', function (socket) {
+    console.log('connection')
+
+    socket.on('regist', data => {
+        socket.data = data
+        onlineClientQueue.add(socket)
+    })
+
+    socket.on('run-code-callback', log => {
+        logTrace.emit('run-code-callback', log)
+    })
+
+    socket.on('run-code', function (data) {
+        onlineClientQueue.queue.map(c => {
+            if (c.id === data.target) {
+                c.emit('run-code', data)
+            }
+        })
+    })
+
+    socket.on('disconnect', function () {
+        onlineClientQueue.remove(socket)
+    })
+})
+
+router.get('/clients', ctx => {
+    ctx.body = onlineClientQueue.queue.map(c => {
+        return {
+            id: c.id,
+            system: c.data.system
+        }
+    })
+})
+
 console.log(`listening on port ${ Config.PORT }`);
 
 module.exports = app
