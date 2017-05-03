@@ -1,12 +1,10 @@
 
 import LogManager from './lib/log-cat'
 
-
 const el = document.createElement('div')
 el.id = 'ddd'
 el.setAttribute('style', 'height: 20px; width: 20px; background: red;')
 document.body.appendChild(el)
-
 
 const defaultOptions = {
     el: '#ddd', // default window

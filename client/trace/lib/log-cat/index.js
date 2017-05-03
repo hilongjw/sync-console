@@ -1,6 +1,6 @@
 import SystemInfo from '../system'
 import { getRandomKey, isFunction } from '../../utils'
-import IO from 'socket.io-client'
+import io from 'socket.io-client'
 
 export default class LogManager {
     constructor (props) {
@@ -15,15 +15,18 @@ export default class LogManager {
         this.errorQueue = []
         this.logIndex = 0
         this.system = {}
+        this.listeners = {}
 
         SystemInfo.info((err, data) => {
             this.system = data
         })
 
         this.mock(['log', 'error', 'warn'])
+        this.initSocket()
+    }
 
-        this.socket = IO.connect(this.options.socket)
-
+    initSocket () {
+        this.socket = io.connect(this.options.socket)
         this.socket.on('connect', () => {
             this.socket.emit('regist', {
                 system: this.system
@@ -35,8 +38,55 @@ export default class LogManager {
         })
     }
 
+    $on (type, cb) {
+        if (!this.listeners[type]) this.listeners[type] = []
+        this.listeners[type].push(cb)
+        return this.listeners[type].length - 1
+    }
+
+    $off (type, cb) {
+        if (!this.listeners[type] || !this.listeners[type].length) return
+        if (!cb) {
+            this.listeners[type].map(cb => cb = null)
+            this.listeners[type] = []
+        }
+        if (typeof cb === 'function') {
+            this.listeners[type].map((func, i) => {
+                if (func === cb) {
+                    this.listeners[type].splice(i, 1)
+                    func = null
+                }
+            })
+        }
+        if (typeof cb === 'number') {
+            this.listeners[type].splice(cb, 1)
+        }
+    }
+
+    $emit (...args) {
+        if (!args.length) return
+        const type = args[0]
+        args.shift()
+        if (this.listeners[type] && this.listeners[type].length) {
+            this.listeners[type].map(cb => {
+                cb.apply(null, args)
+            })
+        }
+    }
+
     toJSON () {
         return 'LogManager'
+    }
+
+    clearHistory () {
+        this.historyQueue = []
+        this.save()
+        this.$emit('clearHistory')
+    }
+
+    clear () {
+        this.logQueue = []
+        this.$emit('clear')
     }
 
     errorHandler (error, vm, info) {
@@ -74,6 +124,8 @@ export default class LogManager {
         }
         this.historyQueue.push(log)
         this.logQueue.push(log)
+
+        this.$emit('newLog', log)
 
         this.socket.emit('run-code-callback', log)
 
@@ -124,8 +176,7 @@ export default class LogManager {
     }
 
     mockOnError () {
-        this.windowOnError = window.onerror
-        
+        this.windowOnError = window.onerror        
         window.onerror = (message, source, lineNo, colNo, error) => {
             const err = {
                 message: message,

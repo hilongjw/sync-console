@@ -47,6 +47,26 @@
     box-shadow: 0 8px 24px rgba(0,0,0,.2);
     cursor: pointer;
 }
+.rd-console-btn {
+    background: #dadada;
+    color: #151515;
+    border: none;
+    line-height: 35px;
+    height: 35px;
+    font-size: 13px;
+    padding: 0 20px;
+    outline: none;
+}
+.rd-console-btn.highlight {
+    background: #673ab7;
+    color: #fff;
+}
+.rd-console-execcode-action-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+}
 </style>
 
 <template>

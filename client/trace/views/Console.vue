@@ -21,18 +21,6 @@
     box-sizing: border-box;
     border: 1px solid #e2e2e2;
 }
-.rd-console-exec-btn {
-    position: absolute;
-    right: 0;
-    top: 0;
-    background: #673ab7;
-    border: none;
-    color: #fff;
-    line-height: 35px;
-    height: 35px;
-    font-size: 13px;
-    padding: 0 20px;
-}
 </style>
 
 <template>
@@ -40,27 +28,46 @@
         <Log :key="log.id" :log="log" v-for="log in logQueue"></Log>
         <div class="rd-console-execcode">
             <textarea @keyup.enter="fire" placeholder="run code here..." class="rd-console-exec-text" v-model="command" rows="1"></textarea>
-            <button class="rd-console-exec-btn"  @click="fire">OK</button>
+            <div class="rd-console-execcode-action-right">
+                <button class="rd-console-btn highlight"  @click="fire">OK</button>
+                <button class="rd-console-btn"  @click="clear">Clear</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import Log from '../components/LogViewer.vue'
+
 export default {
     data () {
         return {
             command: '',
-            logQueue: this.$root.$logManager.logQueue
+            logQueue: this.$root.$logManager.logQueue.slice()
         }
     },
     components: {
         Log
     },
+    mounted () {
+        this.$root.$logManager.$on('clear', log => {
+            this.logQueue = []
+        })
+        this.$root.$logManager.$on('newLog', log => {
+            this.logQueue.push(log)
+        })
+    },
+    beforeDestroy () {
+        this.$root.$logManager.$off('newLog')
+        this.$root.$logManager.$off('clear')
+    },
     methods: {
         fire () {
             this.$root.$logManager.execCommand(this.command)
             this.command = ''
+        },
+        clear () {
+             this.$root.$logManager.clear()
         }
     }
 }
