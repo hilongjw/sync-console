@@ -11,6 +11,6 @@ import LogTracer from './tracer'
 // })
 
 // eslint-disable-next-line
-__webpack_require__.p = 'http://192.168.18.39:8666/'
+__webpack_require__.p = '/' //'http://192.168.18.39:8666/'
 
 export default LogTracer

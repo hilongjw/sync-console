@@ -1,12 +1,15 @@
 const SystemInfo = {
-    info (cb) {
-        let data = {
+    init () {
+        return {
             UA: navigator.userAgent,
-            system: this.system(),
-            wechat: this.wechat(),
-            network: this.network()
+            system: SystemInfo.system(),
+            wechat: SystemInfo.wechat(),
+            network: SystemInfo.network()
         }
-        this.performance(data, cb)
+    },
+
+    info (cb) {
+        this.performance(this.init(), cb)
     },
 
     system () {

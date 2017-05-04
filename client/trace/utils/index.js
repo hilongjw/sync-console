@@ -1,9 +1,19 @@
 /*eslint-disable*/
 /**
- * Utility Functions
  *
- * @author WechatFE
+ * fork from WechatFE vconsole util
  */
+
+// Yanked from https://git.io/vS8DV re-used under CC0
+// with some tiny modifications
+export function isError (value) {
+  switch ({}.toString.call(value)) {
+    case '[object Error]': return true;
+    case '[object Exception]': return true;
+    case '[object DOMException]': return true;
+    default: return value instanceof Error;
+  }
+}
 
 /**
  * get formatted date by timestamp

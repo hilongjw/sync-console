@@ -20,8 +20,8 @@ class LogTracer {
         window.logManager = this.logManager = new LogManager(this.options)
 
         if (options.Vue) {
-            options.Vue.config.errorHandler = function () {
-                window.logManager.errorHandler(arguments)
+            options.Vue.config.errorHandler = (...args) => {
+                this.logManager.errorHandler.apply(this.logManager, args)
             }
         }
 

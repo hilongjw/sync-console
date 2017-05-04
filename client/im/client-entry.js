@@ -15,4 +15,35 @@ const logTracer = new window.LogTracer.default({
     Vue: Vue
 })
 
+ // eslint-disable-next-line
+const app = new Vue({
+    el: '#app',
+    render (h) {
+        return <div>1</div>
+    },
+    mounted () {
+        console.log('app mounted')
+        this.show()
+    },
+    methods: {
+        show () {
+            console.log(this.a.b)
+        }
+    }
+})
+
+const aa = {
+    b () {
+        this.c()
+    },
+    c () {
+        this.d()
+    },
+    d () {
+        JSON.parse({})
+    }
+}
+
+aa.b()
+
 console.log('app test')

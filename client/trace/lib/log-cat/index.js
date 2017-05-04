@@ -10,6 +10,7 @@ import {
 import SystemInfo from '../system'
 import Event from './event'
 import stringifyVue from './vue-instance'
+import TraceKit from './trace-kit'
 
 function formatHeader (header) {
     let headers = {}
@@ -41,7 +42,7 @@ export default class LogManager extends Event {
         this.errorQueue = []
         this.netWorkQueue = []
         this.logIndex = 0
-        this.system = {}
+        this.system = SystemInfo.init()
 
         SystemInfo.info((err, data) => {
             if (err) {
@@ -92,11 +93,28 @@ export default class LogManager extends Event {
     }
 
     errorHandler (error, vm, info) {
+        const stack = TraceKit.computeStackTrace(error)
+        if (!stack) {
+            return console.log('simple report')
+        }
+        let lineNo
+        let colNo
+
+        if (stack.stack.length) {
+            lineNo = stack.stack[0].line
+            colNo = stack.stack[0].column
+        }
+
         this.report({
+            lineNo: lineNo,
+            colNo: colNo,
+            source: stack.url,
+            name: stack.name,
+            error: error,
             message: error.message,
-            stack: error.stack,
+            stack: stack.stack,
             info: info,
-            vm: vm
+            vm: stringifyVue('', vm)
         })
     }
 
@@ -121,10 +139,11 @@ export default class LogManager extends Event {
         })
     }
 
-    report ({ message, stack, info, vm, source, lineNo, colNo }) {
+    report ({ message, name, stack, info, vm, source, lineNo, colNo }) {
         const id = getUniqueId()
         const reportData = {
             requestId: id,
+            name: name,
             message: message,
             stack: stack,
             info: info,
@@ -134,6 +153,8 @@ export default class LogManager extends Event {
             vue: vm,
             system: this.system
         }
+
+        console.log(reportData)
 
         this.loadAxios()
             .then(axios => {
@@ -220,15 +241,20 @@ export default class LogManager extends Event {
     }
 
     mockOnError () {
+        TraceKit.collectWindowErrors = false
         this.windowOnError = window.onerror
         window.onerror = (message, source, lineNo, colNo, error) => {
+            const stack = error && TraceKit.computeStackTrace(error)
+            if (!stack) return console.log('simple report')
+
             const err = {
+                name: stack.name,
                 message: message,
                 source: source,
                 lineNo: lineNo,
                 colNo: colNo,
                 error: error,
-                stack: error && error.stack
+                stack: stack.stack
             }
 
             this.errorQueue.push(err)
