@@ -1,4 +1,14 @@
 /*eslint-disable*/
+import objectAssign from 'object-assign'
+import Promise from 'promise-polyfill'
+
+if (!window.Promise) {
+    window.Promise = Promise
+}
+
+if (!Object.assign) {
+    Object.assign = objectAssign
+}
 
 // Array.map polyfill
 if (!Array.prototype.map) {
@@ -23,4 +33,6 @@ if (!Array.prototype.filter) {
         return rv
     }
 }
+
+
 

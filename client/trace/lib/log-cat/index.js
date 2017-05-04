@@ -32,8 +32,8 @@ export default class LogManager extends Event {
         super()
         this.options = {
             maxLogCount: props.maxLogCount || 50,
-            report: props.report,
-            socket: props.socket
+            server: props.server,
+            report: props.report
         }
 
         this.logQueue = []
@@ -50,7 +50,7 @@ export default class LogManager extends Event {
             this.system = data
         })
 
-        this.mock(['log', 'error', 'warn'])
+        this.mock(['info', 'error', 'warn'])
         this.check()
     }
 
@@ -63,7 +63,7 @@ export default class LogManager extends Event {
     initSocket () {
         import('socket.io-client')
             .then(io => {
-                this.socket = io.connect(this.options.socket)
+                this.socket = io.connect(this.options.server + 'log')
                 this.socket.on('connect', () => {
                     this.socket.emit('regist', {
                         system: this.system
@@ -103,11 +103,28 @@ export default class LogManager extends Event {
     loadAxios () {
         if (this.axios) return Promise.resolve(this.axios)
         return import('axios')
+            .then(axios => {
+                this.axios = axios
+                return axios
+            })
+    }
+
+    sendLog (id, log) {
+        return this.axios({
+            url: 'https://fd.igetget.com/log',
+            method: 'post',
+            data: {
+                errorId: id,
+                level: log.type,
+                content: log.args
+            }
+        })
     }
 
     report ({ message, stack, info, vm, source, lineNo, colNo }) {
-        let reportData = {
-            requestId: getUniqueId(),
+        const id = getUniqueId()
+        const reportData = {
+            requestId: id,
             message: message,
             stack: stack,
             info: info,
@@ -115,21 +132,22 @@ export default class LogManager extends Event {
             lineNo: lineNo,
             colNo: colNo,
             vue: vm,
-            historyQueue: this.historyQueue
+            system: this.system
         }
 
         this.loadAxios()
             .then(axios => {
+                this.historyQueue.map(log => this.sendLog(id, log))
                 axios({
                     url: this.options.report,
                     method: 'post',
                     data: reportData
                 })
                 .then(res => {
-                    console.log(res)
+                    console.info(res)
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.info(err)
                 })
             })
     }
@@ -157,7 +175,8 @@ export default class LogManager extends Event {
 
     save () {
         const str = JSON.stringify(this.historyQueue)
-        setStorage('historyQueue', str)
+        const sucsess = setStorage('historyQueue', str)
+        if (!sucsess) this.historyQueue = []
     }
 
     load () {
@@ -174,11 +193,11 @@ export default class LogManager extends Event {
     }
 
     execCommand (code) {
-        console.log(code)
+        console.info(code)
         try {
             // eslint-disable-next-line
             let result = eval(code)
-            console.log(result)
+            console.info(result)
         } catch (e) {
             console.error(e)
         }

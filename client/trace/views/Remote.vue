@@ -76,7 +76,7 @@ import io from 'socket.io-client'
 export default {
     data () {
         return {
-            client: io.connect(this.$root.$logManager.options.socket),
+            client: io.connect(this.$root.$logManager.options.server + 'log'),
             state: {
                 showClient: false
             },
@@ -110,8 +110,9 @@ export default {
     },
     methods: {
         queryClient () {
+            console.debug(this.$root.$logManager.options)
             axios({
-                url: '/clients'
+                url: this.$root.$logManager.options.server + 'clients'
             })
             .then(res => {
                 this.clientList = res.data

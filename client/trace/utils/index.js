@@ -173,7 +173,14 @@ export function getUniqueId() {
 export function setStorage (key, value) {
     if (!window.localStorage) return
     key = '__LogTracer_' + key
-    localStorage.setItem(key, value)
+    let status = true
+    try {
+        localStorage.setItem(key, value)
+    } catch (e) {
+        console.debug(e)
+        status = false
+    }
+    return status
 }
 
 export function getStorage (key) {

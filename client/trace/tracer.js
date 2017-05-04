@@ -1,16 +1,11 @@
 import LogManager from './lib/log-cat'
 import { checkFlag } from './utils'
 
-const el = document.createElement('div')
-el.id = 'ddd'
-el.setAttribute('style', 'height: 20px; width: 20px; background: red;')
-document.body.appendChild(el)
-
 const defaultOptions = {
-    el: '#ddd', // default window
     clickCount: 5, // in 10s
     maxLogCount: 50,
-    report: 'http://xxxxx.com/api/report',
+    server: '/',
+    report: '',
     Vue: null
 }
 
@@ -22,11 +17,7 @@ class LogTracer {
             clickCount: 0
         }
 
-        window.logManager = this.logManager = new LogManager({
-            maxLogCount: this.options.maxLogCount,
-            report: this.options.report,
-            socket: this.options.socket
-        })
+        window.logManager = this.logManager = new LogManager(this.options)
 
         if (options.Vue) {
             options.Vue.config.errorHandler = function () {
@@ -37,10 +28,10 @@ class LogTracer {
         const el = window.document.body.querySelector(this.options.el)
 
         if (!el) {
-            return console.error('invalid el selector with LogTracer')
+            console.warn('invalid el selector with LogTracer')
+        } else {
+            el.addEventListener('click', this.clickMark.bind(this))
         }
-
-        el.addEventListener('click', this.clickMark.bind(this))
 
         this.startReset()
         this.check()

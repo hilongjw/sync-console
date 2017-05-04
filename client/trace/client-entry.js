@@ -1,10 +1,5 @@
 import './lib/polyfill'
-import Promise from 'promise-polyfill'
 import LogTracer from './tracer'
-
-if (!window.Promise) {
-    window.Promise = Promise
-}
 
 // const logTracer = new LogTracer({
 //     el: '#ddd', // default window
@@ -14,5 +9,8 @@ if (!window.Promise) {
 //     socket: '/log',
 //     Vue: Vue
 // })
+
+// eslint-disable-next-line
+__webpack_require__.p = 'http://192.168.18.39:8666/'
 
 export default LogTracer
