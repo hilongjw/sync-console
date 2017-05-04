@@ -3,6 +3,9 @@
     display: flex;
     overflow-x: auto;
 }
+.rd-console-header-actions::-webkit-scrollbar {
+    height: 2px;
+}
 </style>
 
 <template>

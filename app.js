@@ -15,7 +15,6 @@ const NODE_ENV = global.NODE_ENV = process.env.NODE_ENV || 'production'
 const routerMount = require('./server/mount')
 routerMount(router, path.resolve(__dirname, 'server/routers'))
 
-app.use(serve(__dirname + '/public'))
 app.use(router.routes())
 app.use(router.allowedMethods())
 
@@ -47,6 +46,7 @@ if (isDev.test(NODE_ENV)) {
     app.use(koaWebpackMiddleware)
 }
 
+app.use(serve(__dirname + '/public'))
 
 const server = app.listen(Config.PORT)
 
@@ -75,8 +75,6 @@ const onlineClientQueue = {
         console.log('removed', this.queue.length)
     }
 }
-
-
 
 logTrace.on('connection', function (socket) {
     console.log('connection')

@@ -126,7 +126,7 @@ export default class LogManager extends Event {
 
         this.$emit('newLog', log)
 
-        this.socket.emit('run-code-callback', log)
+        this.socket && this.socket.emit('run-code-callback', log)
 
         clearTimeout(this.timer)
         this.timer = setTimeout(this.save.bind(this), 100)
