@@ -41,7 +41,7 @@ export default {
             this.command = ''
         },
         clear () {
-             this.$root.$logManager.clearHistory()
+            this.$root.$logManager.clearHistory()
         }
     }
 }

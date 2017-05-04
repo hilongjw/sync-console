@@ -133,15 +133,15 @@ export default {
         },
         touchNav (nav) {
             switch (nav.type) {
-                case 'localStorage':
-                    this.initStorage('localStorage')
-                    break
-                case 'cookie':
-                    this.initCookie()
-                    break
-                case 'sessionStorage':
-                    this.initStorage('sessionStorage')
-                    break
+            case 'localStorage':
+                this.initStorage('localStorage')
+                break
+            case 'cookie':
+                this.initCookie()
+                break
+            case 'sessionStorage':
+                this.initStorage('sessionStorage')
+                break
             }
         }
     }

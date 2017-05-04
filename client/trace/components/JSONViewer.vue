@@ -52,7 +52,7 @@
 </style>
 
 <script>
-import getType from '../lib/get-type' 
+import getType from '../lib/get-type'
 
 function simpleRender (h, val, cls, key) {
     if (key) {
@@ -70,40 +70,29 @@ function renderVal (h, val, key) {
     const type = getType(val)
 
     switch (type) {
-        case 'string':
-            return simpleRender(h, val, 'json-view-val-string', key)
-            break
-        case 'number':
-            return simpleRender(h, val, 'json-view-val-number', key)
-            break
-        case 'boolean':
-            return simpleRender(h, val.toString(), 'json-view-val-object', key)
-            break
-        case 'date':
-            return simpleRender(h, val.toString(), 'json-view-val', key)
-            break
-        case 'error':
-            let msg = val.stack || val.toString()
-            return simpleRender(h, msg, 'json-view-val json-view-val-red', key)
-            break
-        case 'regexp':
-            return simpleRender(h, val.toString(), 'json-view-val-object', key)
-            break
-        case 'function':
-            return simpleRender(h, val.toString(), '', key)
-            break
-        case 'undefined':
-            return simpleRender(h, 'undefined', 'json-view-val json-view-val-undefined', key)
-            break
-        case 'null':
-            return simpleRender(h, 'null', 'json-view-val json-view-val-object', key)
-            break
-        case 'array':
-            return simpleRender(h, h(JSONViewer, { props: { data: val, name: key }}), 'json-view-val', key)
-            break
-        case 'object':
-            return simpleRender(h, h(JSONViewer, { props: { data: val, name: key }}), 'json-view-val', key)
-            break
+    case 'string':
+        return simpleRender(h, val, 'json-view-val-string', key)
+    case 'number':
+        return simpleRender(h, val, 'json-view-val-number', key)
+    case 'boolean':
+        return simpleRender(h, val.toString(), 'json-view-val-object', key)
+    case 'date':
+        return simpleRender(h, val.toString(), 'json-view-val', key)
+    case 'error':
+        let msg = val.stack || val.toString()
+        return simpleRender(h, msg, 'json-view-val json-view-val-red', key)
+    case 'regexp':
+        return simpleRender(h, val.toString(), 'json-view-val-object', key)
+    case 'function':
+        return simpleRender(h, val.toString(), '', key)
+    case 'undefined':
+        return simpleRender(h, 'undefined', 'json-view-val json-view-val-undefined', key)
+    case 'null':
+        return simpleRender(h, 'null', 'json-view-val json-view-val-object', key)
+    case 'array':
+        return simpleRender(h, h(JSONViewer, {props: { data: val, name: key }}), 'json-view-val', key)
+    case 'object':
+        return simpleRender(h, h(JSONViewer, {props: { data: val, name: key }}), 'json-view-val', key)
     }
 }
 
@@ -116,7 +105,6 @@ const JSONViewer = {
     },
     render (h) {
         let dataType = getType(this.data)
-        let type
         let childNodes
 
         if (dataType === 'array') {
@@ -128,22 +116,18 @@ const JSONViewer = {
         }
 
         switch (dataType) {
-            case 'string':
-                return renderVal(h, this.data)
-            case 'number':
-                return renderVal(h, this.data)
-            case 'number':
-                return renderVal(h, this.data)
-            case 'boolean':
-                return renderVal(h, this.data)
-            case 'date':
-                return renderVal(h, this.data)
-            case 'error':
-                return renderVal(h, this.data)
-            case 'regexp':
-                return renderVal(h, this.data)
-            default:
-                break;
+        case 'string':
+            return renderVal(h, this.data)
+        case 'number':
+            return renderVal(h, this.data)
+        case 'boolean':
+            return renderVal(h, this.data)
+        case 'date':
+            return renderVal(h, this.data)
+        case 'error':
+            return renderVal(h, this.data)
+        case 'regexp':
+            return renderVal(h, this.data)
         }
 
         if (this.show) {
@@ -160,7 +144,6 @@ const JSONViewer = {
             { childNodes }
             </div>
         </div>
-
     },
     methods: {
         toggle (e) {

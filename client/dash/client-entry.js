@@ -6,3 +6,5 @@ const app = new Vue({
     serverCacheKey: () => 'Dash',
     ...App
 })
+
+export default app

@@ -1,7 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-const webpackHotMiddlewareConfig = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000'
-const getEntries = require('./getEntries')
 const buildConfig = require('../config/build')
 
 const staticPath = buildConfig.staticPath
@@ -18,7 +16,17 @@ module.exports = {
         extensions: ['.js', '.vue', '.css']
     },
     module: {
-        loaders: [{
+        rules: [{
+            enforce: 'pre',
+            test: /.vue$/,
+            exclude: /node_modules/,
+            use: [{
+                loader: 'eslint-loader',
+                options: {
+                    formatter: require('eslint-friendly-formatter')
+                }
+            }]
+        }, {
             test: /\.vue$/,
             loader: 'vue-loader'
         }, {
@@ -40,5 +48,5 @@ module.exports = {
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
-    ],
+    ]
 }

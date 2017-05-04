@@ -1,4 +1,3 @@
-
 import LogManager from './lib/log-cat'
 
 const el = document.createElement('div')

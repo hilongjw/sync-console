@@ -1,7 +1,6 @@
 import SystemInfo from '../system'
 import Event from './event'
 import { getRandomKey, isFunction } from '../../utils'
-import io from 'socket.io-client'
 import stringify from 'json-stringify-safe'
 import stringifyVue from './vue-instance'
 
@@ -54,16 +53,19 @@ export default class LogManager extends Event {
     }
 
     initSocket () {
-        this.socket = io.connect(this.options.socket)
-        this.socket.on('connect', () => {
-            this.socket.emit('regist', {
-                system: this.system
-            })
+        import('socket.io-client')
+            .then(io => {
+                this.socket = io.connect(this.options.socket)
+                this.socket.on('connect', () => {
+                    this.socket.emit('regist', {
+                        system: this.system
+                    })
 
-            this.socket.on('run-code', (data) => {
-                this.execCommand(data.code)
+                    this.socket.on('run-code', (data) => {
+                        this.execCommand(data.code)
+                    })
+                })
             })
-        })
     }
 
     toJSON () {

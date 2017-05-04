@@ -1,5 +1,6 @@
-import VueRouter from 'vue-router'
 import Vue from 'vue'
+import VueRouter from 'vue-router'
+
 import Console from '../views/Console.vue'
 import History from '../views/History.vue'
 import Application from '../views/Application.vue'

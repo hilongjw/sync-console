@@ -28,7 +28,7 @@ export default {
     },
     methods: {
         touch (tab, index) {
-            this.tabs.map(item => item.active = false)
+            this.tabs.map(item => (item.active = false))
             tab.active = true
             this.$emit('touch', tab)
             this.$router.push(tab.router)

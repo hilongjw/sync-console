@@ -89,7 +89,7 @@ export default {
     },
     mounted () {
         SystemInfo.info((err, data) => {
-            this.init(data)
+            this.init(data, err)
         })
     },
     methods: {

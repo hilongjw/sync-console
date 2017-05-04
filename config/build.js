@@ -5,6 +5,6 @@ module.exports = {
     serverName: 'server-entry.js',
     clientPath: path.resolve(__dirname, '../client/'),
     staticPath: path.resolve(__dirname, '../public/'),
-    filename: 'client/[name]-[hash].js',
-    chunkFilename: 'client/[name]-[hash].js'
+    filename: 'client/[name].js',
+    chunkFilename: 'client/[name].js'
 }

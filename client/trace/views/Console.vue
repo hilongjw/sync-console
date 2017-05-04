@@ -67,7 +67,7 @@ export default {
             this.command = ''
         },
         clear () {
-             this.$root.$logManager.clear()
+            this.$root.$logManager.clear()
         }
     }
 }

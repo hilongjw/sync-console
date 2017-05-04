@@ -68,7 +68,7 @@ export default {
             })
         },
         clear () {
-             window.logManager.netWorkQueue = []
+            window.logManager.netWorkQueue = []
         }
     }
 }

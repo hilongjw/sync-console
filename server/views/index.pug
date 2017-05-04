@@ -5,6 +5,5 @@ html(
     include components/head.pug
     body
         div#app
-        script(src='/client/vendor' + "-" + hash + '.js')
-        script(src='/client/trace-' + hash + '.js')
-        script(src='/client/' + bundle + "-" + hash + '.js')
+        script(src='/client/trace.js')
+        script(src='/client/' + bundle + '.js')

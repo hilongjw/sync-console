@@ -98,7 +98,7 @@ function getPointerPosition (e) {
             x: e.clientX || e.pageX,
             y: e.clientY || e.pageY
         }
-    } else if (e.touches && e.touches.length){
+    } else if (e.touches && e.touches.length) {
         pointer = {
             x: e.touches[0].clientX || e.touches[0].pageX,
             y: e.touches[0].clientY || e.touches[0].pageY
@@ -114,7 +114,7 @@ export default {
             size: {
                 scale: false,
                 clientY: 0,
-                height: 300 
+                height: 300
             },
             state: {
                 show: true
@@ -183,7 +183,7 @@ export default {
             this.size.y = pointer.y
         },
         resizeEnd (e) {
-             this.size.scacle = false
+            this.size.scacle = false
         },
         resizing (e) {
             if (!this.size.scacle) return

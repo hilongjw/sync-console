@@ -21,19 +21,6 @@ const productionConf = merge(baseConfig, {
                 warnings: false
             }
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: function (module, count) {
-            // any required modules inside node_modules are extracted to vendor
-            return (
-              module.resource &&
-              /\.js$/.test(module.resource) &&
-              module.resource.indexOf(
-                path.join(__dirname, '../node_modules')
-              ) === 0
-            )
-            }
-        }),
         new OptimizeCssAssetsPlugin({
             cssProcessor: require('cssnano'),
             cssProcessorOptions: { discardComments: { removeAll: true } },
@@ -47,18 +34,18 @@ const productionConf = merge(baseConfig, {
                             browsers: ['last 3 versions']
                         })
                     ],
-                    css: ExtractTextPlugin.extract({
-                        loader: "css-loader",
-                        fallbackLoader: "vue-style-loader"
-                    })
+                    // css: ExtractTextPlugin.extract({
+                    //     loader: "css-loader",
+                    //     fallbackLoader: "vue-style-loader"
+                    // })
                 }
             }
         }),
         new BunddleInsert(),
-        new ExtractTextPlugin({
-            filename: 'css/[name]-[hash].css',
-            allChunks: true
-        })
+        // new ExtractTextPlugin({
+        //     filename: 'css/[name]-[hash].css',
+        //     allChunks: true
+        // })
     ]
 })
 
