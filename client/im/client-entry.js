@@ -6,7 +6,8 @@
 // app.$mount(el)
 import Vue from 'vue'
 
-const logTracer = new LogTracer({
+// eslint-disable-next-line
+const logTracer = new window.LogTracer({
     el: '#ddd', // default window
     clickCount: 5, // in 10s
     maxLogCount: 50,

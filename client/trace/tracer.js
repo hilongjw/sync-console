@@ -16,21 +16,21 @@ const defaultOptions = {
 class LogTracer {
     constructor (options) {
         this.options = Object.assign({}, defaultOptions, options)
-        
+        this.app = undefined
         this.state = {
             clickCount: 0
         }
 
-        window.logManager =  this.logManager = new LogManager({
+        window.logManager = this.logManager = new LogManager({
             maxLogCount: this.options.maxLogCount,
             report: this.options.report,
             socket: this.options.socket
         })
 
         if (options.Vue) {
-            options.Vue.config.errorHandler = (function () {
-                this.logManager.errorHandler(arguments)
-            }).bind(this)
+            options.Vue.config.errorHandler = function () {
+                window.logManager.errorHandler(arguments)
+            }
         }
 
         const el = window.document.body.querySelector(this.options.el)
@@ -42,7 +42,7 @@ class LogTracer {
         el.addEventListener('click', this.clickMark.bind(this))
 
         this.startReset()
-        this.show()    
+        this.show()
     }
 
     startReset () {
@@ -65,14 +65,14 @@ class LogTracer {
         // for async load log ui
         import('./app')
             .then(module => {
-                const app = module.install(this.logManager)
-                app.show()
+                this.app = module.install(this.logManager)
+                this.app.show()
             })
     }
 
     hide () {
         this.startReset()
-        app.hide()
+        this.app.hide()
     }
 }
 

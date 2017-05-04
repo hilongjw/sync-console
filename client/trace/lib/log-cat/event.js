@@ -11,7 +11,7 @@ export default class Event {
     $off (type, cb) {
         if (!this._listeners[type] || !this._listeners[type].length) return
         if (!cb) {
-            this._listeners[type].map(cb => cb = null)
+            this._listeners[type].map(cb => (cb = null))
             this._listeners[type] = []
         }
         if (typeof cb === 'function') {

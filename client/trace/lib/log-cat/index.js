@@ -5,8 +5,9 @@ import stringify from 'json-stringify-safe'
 import stringifyVue from './vue-instance'
 
 function getUniqueID () {
-    let id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        let r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8)
+    let id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        let r = Math.random() * 16 | 0
+        let v = c === 'x' ? r : (r & 0x3 | 0x8)
         return v.toString(16)
     })
     return id
@@ -45,6 +46,9 @@ export default class LogManager extends Event {
         this.system = {}
 
         SystemInfo.info((err, data) => {
+            if (err) {
+                console.error(err)
+            }
             this.system = data
         })
 
@@ -149,6 +153,7 @@ export default class LogManager extends Event {
     execCommand (code) {
         console.log(code)
         try {
+            // eslint-disable-next-line
             let result = eval(code)
             console.log(result)
         } catch (e) {
@@ -165,7 +170,7 @@ export default class LogManager extends Event {
                     return old.apply(console, args)
                 }
 
-                vm.write.call(vm, method, JSON.parse(stringify(args, stringifyVue)))
+                vm.write(method, JSON.parse(stringify(args, stringifyVue)))
 
                 old.apply(console, args)
             }
@@ -173,7 +178,7 @@ export default class LogManager extends Event {
     }
 
     mockOnError () {
-        this.windowOnError = window.onerror        
+        this.windowOnError = window.onerror
         window.onerror = (message, source, lineNo, colNo, error) => {
             const err = {
                 message: message,
@@ -196,27 +201,27 @@ export default class LogManager extends Event {
 
     requestFormat (req, data) {
         switch (req.readyState) {
-            case 0:
-            case 1:
-                // UNSENT OPENED
-                data.startTime = Date.now()  
-                break
-            case 2:
-                // HEADERS_RECEIVED
-                data.header = req.getAllResponseHeaders()
-                break
-            case 3:
-                // LOADING
-                data.state = 1
-                break
-            case 4:
-                // DONE
-                data.header = req.getAllResponseHeaders()
-                data.headers = formatHeader(data.header) 
-                data.response = req.response
-                data.endTime = Date.now()
-                data.costTime = data.endTime - data.startTime
-                break
+        case 0:
+        case 1:
+            // UNSENT OPENED
+            data.startTime = Date.now()
+            break
+        case 2:
+            // HEADERS_RECEIVED
+            data.header = req.getAllResponseHeaders()
+            break
+        case 3:
+            // LOADING
+            data.state = 1
+            break
+        case 4:
+            // DONE
+            data.header = req.getAllResponseHeaders()
+            data.headers = formatHeader(data.header)
+            data.response = req.response
+            data.endTime = Date.now()
+            data.costTime = data.endTime - data.startTime
+            break
         }
         data.status = req.status
         return data
@@ -247,13 +252,12 @@ export default class LogManager extends Event {
 
     mockXMLHttpRequest () {
         if (!window.XMLHttpRequest) return
-        let _XMLHttpRequest = window.XMLHttpRequest
+        // let _XMLHttpRequest = window.XMLHttpRequest
         const noop = () => {}
-        let self = this
+        let that = this
         let _open = window.XMLHttpRequest.prototype.open
-        let _send = window.XMLHttpRequest.prototype.send
 
-        window.XMLHttpRequest.prototype.open = function(...args){
+        window.XMLHttpRequest.prototype.open = function (...args) {
             let XMLReq = this
             let url = args[1]
             const _onprogress = this.onprogress || noop
@@ -261,22 +265,20 @@ export default class LogManager extends Event {
             XMLReq._requestId = getUniqueID()
             XMLReq._URL = url
 
-            let _onreadystatechange = XMLReq.onreadystatechange || function() {
-                console.debug('no onreadystatechange event')
-            }
+            let _onreadystatechange = XMLReq.onreadystatechange || noop
 
             XMLReq.onreadystatechange = function () {
-                self.addOrUpdateRequest.call(self, this)
+                that.addOrUpdateRequest(this)
                 return _onreadystatechange.apply(XMLReq, arguments)
             }
 
-            this.onprogress = function(...args){
-                self.addOrUpdateRequest.call(self, this)
+            this.onprogress = function (...args) {
+                that.addOrUpdateRequest(this)
                 return _onprogress.apply(XMLReq, args)
             }
 
-            this.onload = function(...args) {
-                self.addOrUpdateRequest.call(self, this)
+            this.onload = function (...args) {
+                that.addOrUpdateRequest(this)
                 return _onload.apply(XMLReq, args)
             }
 

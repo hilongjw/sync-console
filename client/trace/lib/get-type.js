@@ -17,7 +17,7 @@
 // error
 
 export default function getType (val) {
-    if (typeof val === 'undefined') return 'undefined';
-    if (typeof val === 'object' && !val) return 'null';
-    return ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+    if (typeof val === 'undefined') return 'undefined'
+    if (typeof val === 'object' && !val) return 'null'
+    return ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
 }

@@ -21,12 +21,7 @@ function install (logManager) {
     app.$logManager = logManager
     app.$mount(el)
 
-    const app2 = new Vue()
-
-    console.log(app2)
-
     return app
 }
-
 
 export { install }

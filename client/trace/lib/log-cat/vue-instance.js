@@ -20,15 +20,15 @@ function processRouteContext (instance) {
 }
 
 function getInstanceName (instance) {
-  const name = instance.$options.name || instance.$options._componentTag
-  if (name) {
-    return name
-  }
-  const file = instance.$options.__file // injected by vue-loader
-  if (file) {
-    return basename(file)
-  }
-  return instance.$root === instance
+    const name = instance.$options.name || instance.$options._componentTag
+    if (name) {
+        return name
+    }
+    const file = instance.$options.__file // injected by vue-loader
+    if (file) {
+        return basename(file)
+    }
+    return instance.$root === instance
     ? 'Root'
     : 'Anonymous Component'
 }

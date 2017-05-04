@@ -3,13 +3,11 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const state = {
-    
-}
+const state = {}
 
 const getters = {
     logManager: state => {
-      return state.logManager
+        return state.logManager
     }
 }
 
