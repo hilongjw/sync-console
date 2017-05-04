@@ -2,7 +2,7 @@
 .rd-console-console {
     position: relative;
     box-sizing: border-box;
-    padding-bottom: 30px;
+    padding-bottom: 35px;
 }
 .rd-console-execcode {
     position: fixed;

@@ -132,6 +132,10 @@ export default {
                 router: { name: 'system' },
                 active: false
             }, {
+                text: 'Network',
+                router: { name: 'network' },
+                active: false
+            }, {
                 text: 'Application',
                 router: { name: 'application' },
                 active: false
@@ -157,8 +161,6 @@ export default {
         window.addEventListener('mousemove', this.resizing)
         window.addEventListener('touchmove', this.resizing)
         window.addEventListener('touchend', this.resizeEnd)
-
-        console.log({ a: [1,2,3], b: { a: { b: { a: 1, b: [], v: {} } } } })
     },
     beforeDestroy () {
         window.removeEventListener('mouseup', this.resizeEnd)

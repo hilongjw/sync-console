@@ -7,7 +7,6 @@ import snackbar from './lib/snack'
 
 Vue.use(snackbar)
 
-
 function install (logManager) {
     const el = document.createElement('div')
     document.body.appendChild(el)
@@ -21,6 +20,11 @@ function install (logManager) {
 
     app.$logManager = logManager
     app.$mount(el)
+
+    const app2 = new Vue()
+
+    console.log(app2)
+
     return app
 }
 

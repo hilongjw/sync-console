@@ -22,7 +22,7 @@ class LogTracer {
             clickCount: 0
         }
 
-        this.logManager = new LogManager({
+        window.logManager =  this.logManager = new LogManager({
             maxLogCount: this.options.maxLogCount,
             report: this.options.report,
             socket: this.options.socket

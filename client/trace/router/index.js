@@ -6,6 +6,7 @@ import Application from '../views/Application.vue'
 import Report from '../views/Report.vue'
 import SystemView from '../views/System.vue'
 import Remote from '../views/Remote.vue'
+import Network from '../views/Network.vue'
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,10 @@ const routes = [
         path: '/remote',
         name: 'remote',
         component: Remote
+    }, {
+        path: '/network',
+        name: 'network',
+        component: Network
     }
 ]
 
