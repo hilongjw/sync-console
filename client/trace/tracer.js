@@ -1,4 +1,5 @@
 import LogManager from './lib/log-cat'
+import { checkFlag } from './utils'
 
 const el = document.createElement('div')
 el.id = 'ddd'
@@ -42,7 +43,13 @@ class LogTracer {
         el.addEventListener('click', this.clickMark.bind(this))
 
         this.startReset()
-        this.show()
+        this.check()
+    }
+
+    check () {
+        if (checkFlag()) {
+            this.show()
+        }
     }
 
     startReset () {
@@ -63,6 +70,8 @@ class LogTracer {
     show () {
         clearInterval(this.timer)
         // for async load log ui
+        if (this.app) return this.app.show()
+
         import('./app')
             .then(module => {
                 this.app = module.install(this.logManager)

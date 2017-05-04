@@ -1,13 +1,7 @@
-// import { app } from './app'
-
-// const el = document.createElement('div')
-// document.body.appendChild(el)
-
-// app.$mount(el)
 import Vue from 'vue'
 
 // eslint-disable-next-line
-const logTracer = new window.LogTracer({
+const logTracer = new window.LogTracer.default({
     el: '#ddd', // default window
     clickCount: 5, // in 10s
     maxLogCount: 50,
@@ -15,3 +9,5 @@ const logTracer = new window.LogTracer({
     socket: '/log',
     Vue: Vue
 })
+
+console.log('app test')

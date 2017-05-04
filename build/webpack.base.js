@@ -10,7 +10,9 @@ module.exports = {
         path: staticPath,
         publicPath: '/',
         filename: buildConfig.filename,
-        chunkFilename: buildConfig.chunkFilename
+        chunkFilename: buildConfig.chunkFilename,
+        library: 'LogTracer',
+        libraryTarget: 'umd'
     },
     resolve: {
         extensions: ['.js', '.vue', '.css']

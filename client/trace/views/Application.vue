@@ -32,12 +32,11 @@
 }
 .rd-console-app-table-key,
 .rd-console-app-table-hd-key {
-    width: 100px;
-    flex-shrink: 0;
+    flex: 1;
 }
 .rd-console-app-table-val,
 .rd-console-app-table-hd-val {
-    width: 100%;
+    flex: 1;
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;

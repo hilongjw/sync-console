@@ -52,7 +52,7 @@
 </style>
 
 <script>
-import getType from '../lib/get-type'
+import { getType } from '../utils/'
 
 function simpleRender (h, val, cls, key) {
     if (key) {

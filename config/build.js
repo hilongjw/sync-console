@@ -6,5 +6,5 @@ module.exports = {
     clientPath: path.resolve(__dirname, '../client/'),
     staticPath: path.resolve(__dirname, '../public/'),
     filename: 'client/[name].js',
-    chunkFilename: 'client/[name].js'
+    chunkFilename: 'client/trace-chunk-[name].js'
 }

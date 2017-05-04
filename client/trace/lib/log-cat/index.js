@@ -1,17 +1,15 @@
+import stringify from 'json-stringify-safe'
+
+import {
+    setStorage,
+    getStorage,
+    isFunction,
+    checkFlag,
+    getUniqueId
+} from '../../utils'
 import SystemInfo from '../system'
 import Event from './event'
-import { getRandomKey, isFunction } from '../../utils'
-import stringify from 'json-stringify-safe'
 import stringifyVue from './vue-instance'
-
-function getUniqueID () {
-    let id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        let r = Math.random() * 16 | 0
-        let v = c === 'x' ? r : (r & 0x3 | 0x8)
-        return v.toString(16)
-    })
-    return id
-}
 
 function formatHeader (header) {
     let headers = {}
@@ -53,7 +51,13 @@ export default class LogManager extends Event {
         })
 
         this.mock(['log', 'error', 'warn'])
-        this.initSocket()
+        this.check()
+    }
+
+    check () {
+        if (checkFlag()) {
+            this.initSocket()
+        }
     }
 
     initSocket () {
@@ -73,7 +77,7 @@ export default class LogManager extends Event {
     }
 
     toJSON () {
-        return 'LogManager'
+        return this
     }
 
     clearHistory () {
@@ -96,9 +100,14 @@ export default class LogManager extends Event {
         })
     }
 
+    loadAxios () {
+        if (this.axios) return Promise.resolve(this.axios)
+        return import('axios')
+    }
+
     report ({ message, stack, info, vm, source, lineNo, colNo }) {
         let reportData = {
-            requestId: getRandomKey(),
+            requestId: getUniqueId(),
             message: message,
             stack: stack,
             info: info,
@@ -108,7 +117,21 @@ export default class LogManager extends Event {
             vue: vm,
             historyQueue: this.historyQueue
         }
-        console.debug('report to ' + this.options.report, reportData)
+
+        this.loadAxios()
+            .then(axios => {
+                axios({
+                    url: this.options.report,
+                    method: 'post',
+                    data: reportData
+                })
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            })
     }
 
     write (method, logs) {
@@ -134,11 +157,11 @@ export default class LogManager extends Event {
 
     save () {
         const str = JSON.stringify(this.historyQueue)
-        localStorage['LogManager'] = str
+        setStorage('historyQueue', str)
     }
 
     load () {
-        const localStr = localStorage['LogManager'] || '[]'
+        const localStr = getStorage('historyQueue') || '[]'
         let queue = []
 
         try {
@@ -252,7 +275,7 @@ export default class LogManager extends Event {
 
     mockXMLHttpRequest () {
         if (!window.XMLHttpRequest) return
-        // let _XMLHttpRequest = window.XMLHttpRequest
+
         const noop = () => {}
         let that = this
         let _open = window.XMLHttpRequest.prototype.open
@@ -262,7 +285,7 @@ export default class LogManager extends Event {
             let url = args[1]
             const _onprogress = this.onprogress || noop
             const _onload = this.onload || noop
-            XMLReq._requestId = getUniqueID()
+            XMLReq._requestId = getUniqueId()
             XMLReq._URL = url
 
             let _onreadystatechange = XMLReq.onreadystatechange || noop

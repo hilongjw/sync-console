@@ -1,6 +1,10 @@
-// import { app } from './app'
-// import Vue from 'vue'
+import './lib/polyfill'
+import Promise from 'promise-polyfill'
 import LogTracer from './tracer'
+
+if (!window.Promise) {
+    window.Promise = Promise
+}
 
 // const logTracer = new LogTracer({
 //     el: '#ddd', // default window
@@ -10,7 +14,5 @@ import LogTracer from './tracer'
 //     socket: '/log',
 //     Vue: Vue
 // })
-
-window.LogTracer = LogTracer
 
 export default LogTracer
