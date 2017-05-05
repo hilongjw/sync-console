@@ -51,24 +51,22 @@ import Log from '../components/LogViewer.vue'
 export default {
     data () {
         return {
-            state: {
-                showClient: false
-            },
             target: '',
             command: '',
-            clientList: this.$root.$logManager.clientList
+            clientList: this.$root.$logManager.clientQueue
         }
     },
     components: {
         Log
     },
     mounted () {
-        this.$root.$logManager.remoteMode()
+        this.$root.$logManager.scoketClient.loadClients()
+        this.$root.$logManager.$on('init-clients', list => { this.clientList = list })
     },
     methods: {
         choose (client) {
             this.target = client.id
-            this.$root.$logManager.syncRemote(client.id)
+            this.$root.$logManager.scoketClient.remoteMode(client.id)
             this.$snack('choosed ' + client.system.system + ' ' + client.id)
         }
     }

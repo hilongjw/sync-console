@@ -6,7 +6,7 @@ class MockConsole extends Event {
     constructor (options = {}) {
         super()
         this.options = {
-            methods: options.methods || ['log', 'info', 'error']
+            methods: options.methods || ['log', 'warn', 'info', 'error']
         }
         this.logIndex = 0
         this.mockConsole(this.options.methods)

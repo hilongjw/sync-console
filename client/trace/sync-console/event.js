@@ -2,6 +2,7 @@ export default class Event {
     constructor () {
         this._listeners = {}
     }
+
     $on (type, cb) {
         if (!this._listeners[type]) this._listeners[type] = []
         this._listeners[type].push(cb)
