@@ -1,6 +1,7 @@
 import Event from './event'
 import TraceKit from './trace-kit'
 import stringifyVue from './vue-state'
+import { isFunction } from '../utils'
 
 class MockError extends Event {
     constructor (options = {}) {

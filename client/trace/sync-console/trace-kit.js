@@ -3,7 +3,7 @@
 
 import {
     isError
-} from '../../utils'
+} from '../utils'
 /*
  TraceKit - Cross brower stack traces
 

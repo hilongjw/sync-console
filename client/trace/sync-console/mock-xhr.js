@@ -1,7 +1,7 @@
 import Event from './event'
 import {
     getUniqueId
-} from '../../utils'
+} from '../utils'
 
 function formatHeader (header) {
     let headers = {}
@@ -26,7 +26,7 @@ class MockXhr extends Event {
     }
 
     update (req) {
-        const net = this.requestFormat(req, {
+        const net = this.formatRequest(req, {
             _requestId: req._requestId,
             startTime: 0,
             costTime: 0,

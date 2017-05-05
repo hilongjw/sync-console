@@ -1,5 +1,5 @@
-import LogManager from './lib/log-cat'
 import { checkFlag } from './utils'
+import SyncConsole from './sync-console'
 
 const defaultOptions = {
     clickCount: 5, // in 10s
@@ -17,13 +17,10 @@ class LogTracer {
             clickCount: 0
         }
 
-        window.logManager = this.logManager = new LogManager(this.options)
-
-        if (options.Vue) {
-            options.Vue.config.errorHandler = (...args) => {
-                this.logManager.errorHandler.apply(this.logManager, args)
-            }
-        }
+        this.syncConsole = new SyncConsole({
+            server: 'http://127.0.0.1:8855/',
+            Vue: options.Vue
+        })
 
         const el = window.document.body.querySelector(this.options.el)
 
@@ -65,7 +62,7 @@ class LogTracer {
 
         import('./app')
             .then(module => {
-                this.app = module.install(this.logManager)
+                this.app = module.install(this.syncConsole)
                 this.app.show()
             })
     }

@@ -34,7 +34,7 @@
             <NetworkItem v-for="row in list" :key="row._requestId" :data="row"></NetworkItem>
             <div class="rd-console-execcode">
                 <div class="rd-console-execcode-action-right">
-                    <button class="rd-console-btn highlight"  @click="fire">Fire</button>
+                    <button class="rd-console-btn highlight">Fire</button>
                     <button class="rd-console-btn"  @click="clear">Clear</button>
                 </div>
             </div> 
@@ -44,12 +44,11 @@
 
 <script>
 import NetworkItem from '../components/NetWorkItem.vue'
-import axios from 'axios'
 
 export default {
     data () {
         return {
-            list: window.logManager.netWorkQueue
+            list: this.$root.$logManager.netWorkQueue
         }
     },
     components: {
@@ -59,16 +58,8 @@ export default {
 
     },
     methods: {
-        fire () {
-            axios({
-                url: '/clients'
-            })
-            .then(res => {
-                this.clientList = res.data
-            })
-        },
         clear () {
-            window.logManager.netWorkQueue = []
+            this.$root.$logManager.netWorkQueue = []
         }
     }
 }

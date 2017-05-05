@@ -5,7 +5,9 @@ import stringifyVue from './vue-state'
 class MockConsole extends Event {
     constructor (options = {}) {
         super()
-        this.options.methods = options.methods || ['log', 'info', 'error']
+        this.options = {
+            methods: options.methods || ['log', 'info', 'error']
+        }
         this.logIndex = 0
         this.mockConsole(this.options.methods)
     }
