@@ -72,7 +72,7 @@ class SocketClient extends Event {
             this.$emit('update', data.data)
         })
 
-        this.$on('run-code-remote', (code) => {
+        this.$on('run-code-remote', code => {
             this.client.emit('admin:run-code', {
                 code: code,
                 token: 'token',

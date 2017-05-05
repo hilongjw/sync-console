@@ -4,6 +4,9 @@ import MockNetwork from './mock-xhr'
 import MockError from './mock-error'
 import SocketClient from './socket-client'
 import SystemInfo from './system'
+import TraceKit from './trace-kit'
+
+TraceKit.collectWindowErrors = false
 
 class SyncConsole extends Event {
     constructor (options) {
@@ -157,7 +160,7 @@ class SyncConsole extends Event {
             let result = eval(code)
             console.info(result)
         } catch (e) {
-            console.error(e)
+            console.error(TraceKit.computeStackTrace(e))
         }
     }
 

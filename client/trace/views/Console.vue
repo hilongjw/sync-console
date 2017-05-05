@@ -43,7 +43,7 @@ export default {
     data () {
         return {
             command: '',
-            logQueue: this.$root.$logManager.logQueue
+            logQueue: this.$root.$logManager.logQueue.slice()
         }
     },
     components: {
@@ -63,6 +63,7 @@ export default {
     beforeDestroy () {
         this.$root.$logManager.$off('newLog')
         this.$root.$logManager.$off('clear')
+        this.$root.$logManager.$off('init-log')
     },
     methods: {
         fire () {

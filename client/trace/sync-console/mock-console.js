@@ -23,7 +23,7 @@ class MockConsole extends Event {
                 }
 
                 const log = {
-                    id: this.logIndex++,
+                    id: vm.logIndex++,
                     type: method,
                     date: Date.now(),
                     args: JSON.parse(stringify(args, stringifyVue))
