@@ -10,7 +10,7 @@ const logTracer = new window.LogTracer.default({
     el: '#ddd', // default window
     clickCount: 5, // in 10s
     maxLogCount: 50,
-    server: 'http://192.168.18.39:8666/',
+    server: 'http://127.0.0.1:8855/',
     report: 'http://192.168.18.39:8855/api/error-log',
     Vue: Vue
 })
@@ -27,23 +27,9 @@ const app = new Vue({
     },
     methods: {
         show () {
-            console.log(this.a.b)
+            // console.log(this.a.b)
         }
     }
 })
-
-const aa = {
-    b () {
-        this.c()
-    },
-    c () {
-        this.d()
-    },
-    d () {
-        JSON.parse({})
-    }
-}
-
-aa.b()
 
 console.log('app test')

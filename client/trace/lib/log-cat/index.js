@@ -37,6 +37,12 @@ export default class LogManager extends Event {
             report: props.report
         }
 
+        this.remoteSync = false
+        this.remoteTarget = ''
+        this.remoteAdmin = ''
+
+        this.clientList = []
+
         this.logQueue = []
         this.historyQueue = this.load()
         this.errorQueue = []
@@ -61,6 +67,71 @@ export default class LogManager extends Event {
         }
     }
 
+    remoteMode () {
+        if (this.client) return
+        import('socket.io-client')
+            .then(io => {
+                this.remoteSync = true
+                this.client = io.connect(this.options.server + 'log')
+
+                this.client.on('connect', () => {
+                    this.client.emit('regist-admin')
+
+                    this.client.on('regist-admin-success', (clients) => {
+                        clients.map(client => {
+                            this.clientList.push(client)
+                        })
+                    })
+
+                    this.client.on('add-client', client => {
+                        this.clientList.push(client)
+                    })
+
+                    this.client.on('remove-client', client => {
+                        this.clientList.map((c, i) => {
+                            if (client.id === c.id) {
+                                this.clientList.splice(i, 1)
+                            }
+                        })
+                    })
+                })
+            })
+    }
+
+    setRemoteTarget (id) {
+        this.remoteTarget = id
+    }
+
+    setRemoteAdmin (id) {
+        this.remoteAdmin = id
+    }
+
+    syncRemote (id) {
+        if (!this.client) return
+        this.setRemoteTarget(id)
+        this.client.emit('regist-admin')
+
+        this.client.on('regist-admin-success', (clients) => {
+            this.client.emit('sync-ask', {
+                clientId: id
+            })
+        })
+
+        this.client.on('sync-down', data => {
+            this.system = data.data.system
+            this.logQueue = data.data.logQueue
+            this.netWorkQueue = data.data.netWorkQueue
+        })
+        this.client.on('sync-update', data => {
+            if (data.log) {
+                this.logQueue.push(data.log)
+                this.historyQueue.push(data.log)
+                this.$emit('newLog', data.log)
+            }
+            if (data.net) this.netWorkQueue.push(data.net)
+        })
+    }
+
     initSocket () {
         import('socket.io-client')
             .then(io => {
@@ -68,6 +139,19 @@ export default class LogManager extends Event {
                 this.socket.on('connect', () => {
                     this.socket.emit('regist', {
                         system: this.system
+                    })
+
+                    this.socket.on('sync-ask', (data) => {
+                        this.setRemoteAdmin(data.remoteId)
+
+                        this.socket.emit('sync-up', {
+                            remoteId: data.remoteId,
+                            data: {
+                                logQueue: this.logQueue,
+                                netWorkQueue: this.netWorkQueue,
+                                system: this.system
+                            }
+                        })
                     })
 
                     this.socket.on('run-code', (data) => {
@@ -158,7 +242,7 @@ export default class LogManager extends Event {
 
         this.loadAxios()
             .then(axios => {
-                this.historyQueue.map(log => this.sendLog(id, log))
+                // this.historyQueue.map(log => this.sendLog(id, log))
                 axios({
                     url: this.options.report,
                     method: 'post',
@@ -188,7 +272,12 @@ export default class LogManager extends Event {
 
         this.$emit('newLog', log)
 
-        this.socket && this.socket.emit('run-code-callback', log)
+        if (this.socket) {
+            this.socket.emit('run-code-callback', log)
+            this.socket.emit('sync-update', {
+                log: log
+            })
+        }
 
         clearTimeout(this.timer)
         this.timer = setTimeout(this.save.bind(this), 100)
@@ -214,6 +303,9 @@ export default class LogManager extends Event {
     }
 
     execCommand (code) {
+        if (this.remoteSync) {
+            return this.execCommandRemote(code)
+        }
         console.info(code)
         try {
             // eslint-disable-next-line
@@ -222,6 +314,15 @@ export default class LogManager extends Event {
         } catch (e) {
             console.error(e)
         }
+    }
+
+    execCommandRemote (code) {
+        if (!this.client) return
+
+        this.client.emit('run-code', {
+            target: this.remoteTarget,
+            code: code
+        })
     }
 
     mockConsole (methods) {
@@ -280,7 +381,7 @@ export default class LogManager extends Event {
             break
         case 3:
             // LOADING
-            data.state = 1
+            // data.loading = true
             break
         case 4:
             // DONE
@@ -301,6 +402,11 @@ export default class LogManager extends Event {
             if (this.netWorkQueue[i]._requestId === req._requestId) {
                 has = true
                 this.netWorkQueue[i] = this.requestFormat(req, this.netWorkQueue[i])
+                if (this.socket) {
+                    this.socket.emit('sync-update', {
+                        net: this.netWorkQueue[i]
+                    })
+                }
                 break
             }
         }
@@ -320,7 +426,7 @@ export default class LogManager extends Event {
 
     mockXMLHttpRequest () {
         if (!window.XMLHttpRequest) return
-
+        const ignoreReg = /socket.io/
         const noop = () => {}
         let that = this
         let _open = window.XMLHttpRequest.prototype.open
@@ -335,19 +441,21 @@ export default class LogManager extends Event {
 
             let _onreadystatechange = XMLReq.onreadystatechange || noop
 
-            XMLReq.onreadystatechange = function () {
-                that.addOrUpdateRequest(this)
-                return _onreadystatechange.apply(XMLReq, arguments)
-            }
+            if (!ignoreReg.test(url)) {
+                XMLReq.onreadystatechange = function () {
+                    that.addOrUpdateRequest(this)
+                    return _onreadystatechange.apply(XMLReq, arguments)
+                }
 
-            this.onprogress = function (...args) {
-                that.addOrUpdateRequest(this)
-                return _onprogress.apply(XMLReq, args)
-            }
+                this.onprogress = function (...args) {
+                    that.addOrUpdateRequest(this)
+                    return _onprogress.apply(XMLReq, args)
+                }
 
-            this.onload = function (...args) {
-                that.addOrUpdateRequest(this)
-                return _onload.apply(XMLReq, args)
+                this.onload = function (...args) {
+                    that.addOrUpdateRequest(this)
+                    return _onload.apply(XMLReq, args)
+                }
             }
 
             return _open.apply(XMLReq, args)

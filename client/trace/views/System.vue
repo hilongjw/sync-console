@@ -78,7 +78,6 @@
 
 <script>
 import clipboard from 'clipboard-js'
-import SystemInfo from '../lib/system'
 import { getObjAllKeys } from '../utils'
 
 export default {
@@ -88,9 +87,7 @@ export default {
         }
     },
     mounted () {
-        SystemInfo.info((err, data) => {
-            this.init(data, err)
-        })
+        this.init(this.$root.$logManager.system)
     },
     methods: {
         copy (val) {

@@ -70,69 +70,39 @@
 
 <script>
 import Log from '../components/LogViewer.vue'
-import axios from 'axios'
-import io from 'socket.io-client'
 
 export default {
     data () {
         return {
-            client: io.connect(this.$root.$logManager.options.server + 'log'),
             state: {
                 showClient: false
             },
             target: '',
             command: '',
-            clientList: [],
-            logQueue: []
+            clientList: this.$root.$logManager.clientList,
+            logQueue: this.$root.$logManager.logQueue
         }
     },
     components: {
         Log
     },
     mounted () {
-        this.queryClient()
-
-        this.client.on('run-code-callback', log => {
-            this.logQueue.push(log)
-        })
-
-        this.client.on('add-client', client => {
-            this.clientList.push(client)
-        })
-
-        this.client.on('remove-client', client => {
-            this.clientList.map((c, i) => {
-                if (client.id === c.id) {
-                    this.clientList.splice(i, 1)
-                }
-            })
-        })
+        this.$root.$logManager.remoteMode()
     },
     methods: {
-        queryClient () {
-            console.debug(this.$root.$logManager.options)
-            axios({
-                url: this.$root.$logManager.options.server + 'clients'
-            })
-            .then(res => {
-                this.clientList = res.data
-            })
-        },
         toggleClient () {
             this.state.showClient = !this.state.showClient
         },
         choose (client) {
             this.target = client.id
+            this.$root.$logManager.syncRemote(client.id)
             this.toggleClient()
         },
         clear () {
             this.logQueue = []
         },
         fire () {
-            this.client.emit('run-code', {
-                target: this.target,
-                code: this.command
-            })
+            this.$root.$logManager.execCommandRemote(this.command)
             this.command = ''
         }
     }
