@@ -67,6 +67,19 @@ export default class LogManager extends Event {
         }
     }
 
+    addRemoteTarget (client) {
+        let has = false
+        for (let i = 0, len = this.clientList.length; i < len; i++) {
+            if (this.clientList[i].id === client.id) {
+                has = true
+                break
+            }
+        }
+        if (!has) {
+            this.clientList.push(client)
+        }
+    }
+
     remoteMode () {
         if (this.client) return
         import('socket.io-client')
@@ -79,7 +92,7 @@ export default class LogManager extends Event {
 
                     this.client.on('regist-admin-success', (clients) => {
                         clients.map(client => {
-                            this.clientList.push(client)
+                            this.addRemoteTarget(client)
                         })
                     })
 
@@ -113,7 +126,7 @@ export default class LogManager extends Event {
 
         this.client.on('regist-admin-success', (clients) => {
             this.client.emit('sync-ask', {
-                clientId: id
+                remoteTarget: id
             })
         })
 
@@ -122,17 +135,19 @@ export default class LogManager extends Event {
             this.logQueue = data.data.logQueue
             this.netWorkQueue = data.data.netWorkQueue
         })
+
         this.client.on('sync-update', data => {
             if (data.log) {
                 this.logQueue.push(data.log)
                 this.historyQueue.push(data.log)
                 this.$emit('newLog', data.log)
             }
-            if (data.net) this.netWorkQueue.push(data.net)
+            if (data.net) this.addNetworkQueue(data.net)
         })
     }
 
     initSocket () {
+        if (this.socket) return
         import('socket.io-client')
             .then(io => {
                 this.socket = io.connect(this.options.server + 'log')
@@ -142,10 +157,11 @@ export default class LogManager extends Event {
                     })
 
                     this.socket.on('sync-ask', (data) => {
-                        this.setRemoteAdmin(data.remoteId)
+                        console.log('this.setRemoteAdmin(data.remoteAdmin)', data.remoteAdmin)
+                        this.setRemoteAdmin(data.remoteAdmin)
 
                         this.socket.emit('sync-up', {
-                            remoteId: data.remoteId,
+                            remoteAdmin: data.remoteAdmin,
                             data: {
                                 logQueue: this.logQueue,
                                 netWorkQueue: this.netWorkQueue,
@@ -275,6 +291,7 @@ export default class LogManager extends Event {
         if (this.socket) {
             this.socket.emit('run-code-callback', log)
             this.socket.emit('sync-update', {
+                remoteAdmin: this.remoteAdmin,
                 log: log
             })
         }
@@ -396,22 +413,38 @@ export default class LogManager extends Event {
         return data
     }
 
-    addOrUpdateRequest (req) {
+    addNetworkQueue (net) {
         let has = false
         for (let i = 0, len = this.netWorkQueue.length; i < len; i++) {
-            if (this.netWorkQueue[i]._requestId === req._requestId) {
+            if (this.netWorkQueue[i]._requestId === net._requestId) {
                 has = true
-                this.netWorkQueue[i] = this.requestFormat(req, this.netWorkQueue[i])
-                if (this.socket) {
-                    this.socket.emit('sync-update', {
-                        net: this.netWorkQueue[i]
-                    })
-                }
+                this.netWorkQueue[i] = net
                 break
             }
         }
         if (!has) {
-            this.netWorkQueue.push(this.requestFormat(req, {
+            this.netWorkQueue.push(net)
+        }
+        if (this.socket) {
+            this.socket.emit('sync-update', {
+                remoteAdmin: this.remoteAdmin,
+                net: net
+            })
+        }
+    }
+
+    addOrUpdateRequest (req) {
+        let has = false
+        let net
+        for (let i = 0, len = this.netWorkQueue.length; i < len; i++) {
+            if (this.netWorkQueue[i]._requestId === req._requestId) {
+                has = true
+                net = this.requestFormat(req, this.netWorkQueue[i])
+                break
+            }
+        }
+        if (!has) {
+            net = this.requestFormat(req, {
                 _requestId: req._requestId,
                 startTime: 0,
                 costTime: 0,
@@ -420,8 +453,10 @@ export default class LogManager extends Event {
                 headers: {},
                 response: '',
                 url: req._URL
-            }))
+            })
         }
+
+        this.addNetworkQueue(net)
     }
 
     mockXMLHttpRequest () {

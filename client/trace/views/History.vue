@@ -17,7 +17,7 @@ export default {
     data () {
         return {
             command: '',
-            historyQueue: this.$root.$logManager.historyQueue.slice()
+            historyQueue: this.$root.$logManager.historyQueue
         }
     },
     components: {

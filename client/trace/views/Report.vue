@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     data () {
         return {
@@ -16,6 +18,12 @@ export default {
     },
     methods: {
         report () {
+            axios({
+                url: '/'
+            })
+            .then(() => {
+                console.info('reported')
+            })
             this.$snack('report success')
         }
     }

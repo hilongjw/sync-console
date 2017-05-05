@@ -23,47 +23,24 @@
     box-sizing: border-box;
     border: 1px solid #e2e2e2;
 }
-.rd-console-execcode-remote-right {
-    position: absolute;
-    right: 0;
-    top: 0;
-    display: flex;
-}
-.rd-console-btn-client {
-    position: absolute;
-    left: 0;
-    top: 0;
-}
 .rd-console-remote-client-list {
-    position: absolute;
-    bottom: 40px;
-    left: 5px;
     background: #fff;
-    box-shadow: 1px 4px 9px 2px #ccc;
+    /*box-shadow: 1px 4px 9px 2px #ccc;*/
     padding: 10px;
     border-radius: 4px;
 }
 .rd-console-remote-client {
     line-height: 30px;
+    border-bottom: 1px solid #ccc;
 }
 </style>
 
 <template>
     <div class="rd-console-view rd-console-console">
-        <Log :key="log.id" :log="log" v-for="log in logQueue"></Log>
-        <div class="rd-console-execcode-remote">
-            <div class="rd-console-remote-client-list" v-show="state.showClient">
-                <div class="rd-console-remote-client" v-for="client in clientList" @click="choose(client)" >
-                    {{ 'system: ' + client.system.system  }}
-                </div>
+        <div class="rd-console-remote-client-list">
+            <div class="rd-console-remote-client" v-for="client in clientList" @click="choose(client)" >
+                {{ 'system: ' + client.system.system  }}
             </div>
-            <button class="rd-console-btn rd-console-btn-client"  @click="toggleClient">Client</button>
-            <textarea @keyup.enter="fire" placeholder="run code here..." class="rd-console-exec-text" v-model="command" rows="1"></textarea>
-            <div class="rd-console-execcode-remote-right">
-                <button class="rd-console-btn rd-console-btn-exec highlight"  @click="fire">OK</button>
-                <button class="rd-console-btn rd-console-btn-clear"  @click="clear">Clear</button>
-            </div>
-            
         </div>
     </div>
 </template>
@@ -79,8 +56,7 @@ export default {
             },
             target: '',
             command: '',
-            clientList: this.$root.$logManager.clientList,
-            logQueue: this.$root.$logManager.logQueue
+            clientList: this.$root.$logManager.clientList
         }
     },
     components: {
@@ -90,20 +66,10 @@ export default {
         this.$root.$logManager.remoteMode()
     },
     methods: {
-        toggleClient () {
-            this.state.showClient = !this.state.showClient
-        },
         choose (client) {
             this.target = client.id
             this.$root.$logManager.syncRemote(client.id)
-            this.toggleClient()
-        },
-        clear () {
-            this.logQueue = []
-        },
-        fire () {
-            this.$root.$logManager.execCommandRemote(this.command)
-            this.command = ''
+            this.$snack('choosed ' + client.system.system + ' ' + client.id)
         }
     }
 }
