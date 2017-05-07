@@ -29,9 +29,7 @@ class SyncConsole extends Event {
         this.system = SystemInfo.init()
 
         SystemInfo.info((err, data) => {
-            if (err) {
-                console.error(err)
-            }
+            if (err) console.error(err)
             this.system = data
         })
 
@@ -49,7 +47,7 @@ class SyncConsole extends Event {
     newLog (log) {
         this.historyQueue.push(log)
         this.logQueue.push(log)
-        this.$emit('newLog', log)
+        this.$emit('update-log', log)
         this.scoketClient.$emit('ask-update', {
             log: log
         })
@@ -72,7 +70,7 @@ class SyncConsole extends Event {
         if (!has) {
             this.netWorkQueue.push(net)
         }
-        this.$emit('newNet', net)
+        this.$emit('update-net', net)
         this.scoketClient.$emit('ask-update', {
             net: net
         })
@@ -87,7 +85,10 @@ class SyncConsole extends Event {
     }
 
     initClient () {
-        this.scoketClient = new SocketClient(this.options.server + 'sync-console')
+        this.scoketClient = new SocketClient({
+            nsp: this.options.server + 'sync-console'
+        })
+
         this.scoketClient.init()
 
         this.scoketClient.$on('system', (cb) => {

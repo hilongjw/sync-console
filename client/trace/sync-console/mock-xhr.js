@@ -43,8 +43,8 @@ class MockXhr extends Event {
         switch (req.readyState) {
         case 0:
         case 1:
-            // UNSENT OPENED
-            data.startTime = Date.now()
+            // UNSENT and OPENED
+            req._startTime = data.startTime = Date.now()
             break
         case 2:
             // HEADERS_RECEIVED
@@ -56,6 +56,7 @@ class MockXhr extends Event {
             break
         case 4:
             // DONE
+            data.startTime = req._startTime
             data.header = req.getAllResponseHeaders()
             data.headers = formatHeader(data.header)
             data.response = req.response
@@ -72,7 +73,8 @@ class MockXhr extends Event {
         const ignoreReg = /socket.io/
         const noop = () => {}
         let that = this
-        let _open = window.XMLHttpRequest.prototype.open
+        const _open = window.XMLHttpRequest.prototype.open
+        // const _send = window.XMLHttpRequest.prototype.send
 
         window.XMLHttpRequest.prototype.open = function (...args) {
             let XMLReq = this

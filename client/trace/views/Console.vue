@@ -53,7 +53,7 @@ export default {
         this.$root.$logManager.$on('clear', log => {
             this.logQueue = []
         })
-        this.$root.$logManager.$on('newLog', log => {
+        this.$root.$logManager.$on('update-log', log => {
             this.logQueue.push(log)
         })
         this.$root.$logManager.$on('init-log', list => {
@@ -61,7 +61,7 @@ export default {
         })
     },
     beforeDestroy () {
-        this.$root.$logManager.$off('newLog')
+        this.$root.$logManager.$off('update-log')
         this.$root.$logManager.$off('clear')
         this.$root.$logManager.$off('init-log')
     },

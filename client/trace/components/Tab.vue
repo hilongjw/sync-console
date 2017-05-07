@@ -2,7 +2,6 @@
 .rd-console-action-tap {
     line-height: 30px;
     padding: 0 10px;
-    margin-right: 10px;
     -webkit-font-smoothing: antialiased;
 }
 .rd-console-action-tap.active{

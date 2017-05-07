@@ -2,10 +2,8 @@ import { checkFlag } from './utils'
 import SyncConsole from './sync-console'
 
 const defaultOptions = {
-    clickCount: 5, // in 10s
     maxLogCount: 50,
     server: '/',
-    report: '',
     Vue: null
 }
 

@@ -9,14 +9,50 @@
 .rd-console-item.rd-log-type-error {
     background: #fff0f0;
 }
+.rd-console-item.rd-log-type-info::before {
+    content: 'i';
+    background: #2196F3;
+    border-radius: 50%;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
+}
 .rd-console-item.rd-log-type-warn {
     background: #fffbe5;
+}
+.rd-console-item.rd-log-type-warn::before {
+    content: '!';
+    background: #FFC107;
+    border-radius: 50%;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
 }
 .rd-console-item.rd-log-type-error .json-view {
     color: red;
 }
 .rd-console-item.rd-log-type-warn .json-view {
     color: #624100;
+}
+.rd-console-item.rd-log-type-error::before {
+    content: 'x';
+    background: #F44336;
+    border-radius: 50%;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
 }
 </style>
 
@@ -30,6 +66,7 @@
 import JSONViewer from './JSONViewer.vue'
 
 const logClassMap = {
+    info: 'rd-log-type-info',
     error: 'rd-log-type-error',
     warn: 'rd-log-type-warn'
 }
