@@ -39,7 +39,9 @@ class SyncConsole extends Event {
             this.system = data
         })
 
-        this.initConsole()
+        this.initConsole({
+            methods: this.options.consoleMethods
+        })
         this.initNetWork()
         this.initMockError({
             Vue: this.options.Vue
@@ -50,8 +52,8 @@ class SyncConsole extends Event {
         })
     }
 
-    initConsole () {
-        this.mockConsole = new MockConsole()
+    initConsole (options) {
+        this.mockConsole = new MockConsole(options)
         this.mockConsole.$on('new', this.newLog.bind(this))
     }
 

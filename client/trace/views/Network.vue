@@ -49,15 +49,15 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            list: [] // this.$root.$logManager.netWorkQueue.slice()
+            list: [] // this.$syncConsole.netWorkQueue.slice()
         }
     },
     components: {
         NetworkItem
     },
     mounted () {
-        this.$root.$logManager.$on('update-net', () => {
-            this.list = this.$root.$logManager.netWorkQueue.slice()
+        this.$syncConsole.$on('update-net', () => {
+            this.list = this.$syncConsole.netWorkQueue.slice()
         })
     },
     methods: {
@@ -71,7 +71,7 @@ export default {
             this.$snack('report success')
         },
         clear () {
-            this.$root.$logManager.netWorkQueue = []
+            this.$syncConsole.netWorkQueue = []
         }
     }
 }

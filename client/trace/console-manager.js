@@ -7,7 +7,7 @@ const defaultOptions = {
     Vue: null
 }
 
-class LogTracer {
+class SyncConsoleManager {
     constructor (options) {
         this.options = Object.assign({}, defaultOptions, options)
         this.app = undefined
@@ -55,6 +55,7 @@ class LogTracer {
         if (this.app) return Promise.resolve(this.app)
         return import('./app')
             .then(module => {
+                console.log(module)
                 this.app = module.install(this.syncConsole)
                 return this.app
             })
@@ -79,4 +80,4 @@ class LogTracer {
     }
 }
 
-export default LogTracer
+export default SyncConsoleManager

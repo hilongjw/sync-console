@@ -16,19 +16,19 @@ export default {
     data () {
         return {
             command: '',
-            historyQueue: this.$root.$logManager.historyQueue.slice()
+            historyQueue: this.$syncConsole.historyQueue.slice()
         }
     },
     components: {
         Log
     },
     mounted () {
-        this.$root.$logManager.$on('newLog', log => {
+        this.$syncConsole.$on('newLog', log => {
             this.historyQueue.push(log)
         })
     },
     beforeDestroy () {
-        this.$root.$logManager.$off('newLog')
+        this.$syncConsole.$off('newLog')
     },
     methods: {
         clear () {

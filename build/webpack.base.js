@@ -11,7 +11,7 @@ module.exports = {
         publicPath: '/',
         filename: buildConfig.filename,
         chunkFilename: buildConfig.chunkFilename,
-        library: 'LogTracer',
+        library: 'SyncConsole',
         libraryTarget: 'umd'
     },
     resolve: {

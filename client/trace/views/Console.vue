@@ -43,35 +43,35 @@ export default {
     data () {
         return {
             command: '',
-            logQueue: this.$root.$logManager.logQueue.slice()
+            logQueue: this.$syncConsole.logQueue.slice()
         }
     },
     components: {
         Log
     },
     mounted () {
-        this.$root.$logManager.$on('clear', log => {
+        this.$syncConsole.$on('clear', log => {
             this.logQueue = []
         })
-        this.$root.$logManager.$on('update-log', log => {
+        this.$syncConsole.$on('update-log', log => {
             this.logQueue.push(log)
         })
-        this.$root.$logManager.$on('init-log', list => {
+        this.$syncConsole.$on('init-log', list => {
             this.logQueue = list
         })
     },
     beforeDestroy () {
-        this.$root.$logManager.$off('update-log')
-        this.$root.$logManager.$off('clear')
-        this.$root.$logManager.$off('init-log')
+        this.$syncConsole.$off('update-log')
+        this.$syncConsole.$off('clear')
+        this.$syncConsole.$off('init-log')
     },
     methods: {
         fire () {
-            this.$root.$logManager.execCommand(this.command)
+            this.$syncConsole.execCommand(this.command)
             this.command = ''
         },
         clear () {
-            this.$root.$logManager.clear()
+            this.$syncConsole.clear()
         }
     }
 }

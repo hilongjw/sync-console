@@ -53,20 +53,20 @@ export default {
         return {
             target: '',
             command: '',
-            clientList: this.$root.$logManager.clientQueue
+            clientList: this.$syncConsole.clientQueue
         }
     },
     components: {
         Log
     },
     mounted () {
-        this.$root.$logManager.scoketClient.loadClients()
-        this.$root.$logManager.$on('init-clients', list => { this.clientList = list })
+        this.$syncConsole.scoketClient.loadClients()
+        this.$syncConsole.$on('init-clients', list => { this.clientList = list })
     },
     methods: {
         choose (client) {
             this.target = client.id
-            this.$root.$logManager.scoketClient.remoteMode(client.id)
+            this.$syncConsole.scoketClient.remoteMode(client.id)
             this.$snack('choosed ' + client.system.system + ' ' + client.id)
         }
     }

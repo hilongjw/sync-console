@@ -4,7 +4,6 @@ const Koa = require('koa')
 const router = require('koa-router')()
 const serve = require('koa-static')
 const Config = require('./config')
-const cors = require('koa-cors')
 const app = new Koa()
 
 // global
@@ -15,7 +14,6 @@ const NODE_ENV = global.NODE_ENV = process.env.NODE_ENV || 'production'
 const routerMount = require('./server/mount')
 routerMount(router, path.resolve(__dirname, 'server/routers'))
 
-app.use(cors())
 app.use(router.routes())
 app.use(router.allowedMethods())
 

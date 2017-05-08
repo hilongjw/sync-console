@@ -1,5 +1,5 @@
 import './lib/polyfill'
-import LogTracer from './tracer'
+import syncConsoleManager from './console-manager'
 
 // const logTracer = new LogTracer({
 //     el: '#ddd', // default window
@@ -11,6 +11,6 @@ import LogTracer from './tracer'
 // })
 
 // eslint-disable-next-line
-__webpack_require__.p = '/' //'http://192.168.18.39:8666/'
+__webpack_require__.p = '/' // 'http://covteam.u.qiniudn.com/'
 
-export default LogTracer
+export default syncConsoleManager

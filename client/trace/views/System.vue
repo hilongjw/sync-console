@@ -87,7 +87,7 @@ export default {
         }
     },
     mounted () {
-        this.init(this.$root.$logManager.system)
+        this.init(this.$syncConsole.system)
     },
     methods: {
         copy (val) {

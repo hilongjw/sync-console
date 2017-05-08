@@ -33,7 +33,7 @@ const productionConf = merge(baseConfig, {
                         require('autoprefixer')({
                             browsers: ['last 3 versions']
                         })
-                    ],
+                    ]
                     // css: ExtractTextPlugin.extract({
                     //     loader: "css-loader",
                     //     fallbackLoader: "vue-style-loader"
@@ -41,7 +41,7 @@ const productionConf = merge(baseConfig, {
                 }
             }
         }),
-        new BunddleInsert(),
+        new BunddleInsert()
         // new ExtractTextPlugin({
         //     filename: 'css/[name]-[hash].css',
         //     allChunks: true

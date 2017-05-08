@@ -6,7 +6,7 @@ el.setAttribute('style', 'height: 20px; width: 20px; background: red;')
 document.body.appendChild(el)
 
 // eslint-disable-next-line
-const logTracer = new window.LogTracer.default({
+const syncConsoleManager = new window.SyncConsole.default({
     el: '#ddd', // default window
     clickCount: 5, // in 10s
 
@@ -15,6 +15,8 @@ const logTracer = new window.LogTracer.default({
     server: 'https://sync-console-server-fhzqxtoggp.now.sh/',
     Vue: Vue
 })
+
+console.log(window.syncConsoleManager = syncConsoleManager)
 
  // eslint-disable-next-line
 const app = new Vue({

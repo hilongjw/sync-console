@@ -71,69 +71,65 @@ export function getDate(time) {
     };
 }
 
-export function getRandomKey() {
-    return Math.random().toString(16).substr(2) + new Date().getTime().toString(16)
-}
-
 /**
  * determines whether the passed value is a specific type
  * @param mixed value
  * @return boolean
  */
-export function isNumber(value) {
-    return Object.prototype.toString.call(value) == '[object Number]';
-}
-export function isString(value) {
-    return Object.prototype.toString.call(value) == '[object String]';
-}
-export function isArray(value) {
-    return Object.prototype.toString.call(value) == '[object Array]';
-}
-export function isBoolean(value) {
-    return Object.prototype.toString.call(value) == '[object Boolean]';
-}
-export function isUndefined(value) {
-    return Object.prototype.toString.call(value) == '[object Undefined]';
-}
-export function isNull(value) {
-    return Object.prototype.toString.call(value) == '[object Null]';
-}
-export function isSymbol(value) {
-    return Object.prototype.toString.call(value) == '[object Symbol]';
-}
-export function isObject(value) {
-    return (
-        Object.prototype.toString.call(value) == '[object Object]' ||
-        // if it isn't a primitive value, then it is a common object
-        (!isNumber(value) &&
-            !isString(value) &&
-            !isBoolean(value) &&
-            !isArray(value) &&
-            !isNull(value) &&
-            !isFunction(value) &&
-            !isUndefined(value) &&
-            !isSymbol(value)
-        )
-    );
-}
+// export function isNumber(value) {
+//     return Object.prototype.toString.call(value) == '[object Number]';
+// }
+// export function isString(value) {
+//     return Object.prototype.toString.call(value) == '[object String]';
+// }
+// export function isArray(value) {
+//     return Object.prototype.toString.call(value) == '[object Array]';
+// }
+// export function isBoolean(value) {
+//     return Object.prototype.toString.call(value) == '[object Boolean]';
+// }
+// export function isUndefined(value) {
+//     return Object.prototype.toString.call(value) == '[object Undefined]';
+// }
+// export function isNull(value) {
+//     return Object.prototype.toString.call(value) == '[object Null]';
+// }
+// export function isSymbol(value) {
+//     return Object.prototype.toString.call(value) == '[object Symbol]';
+// }
+// export function isObject(value) {
+//     return (
+//         Object.prototype.toString.call(value) == '[object Object]' ||
+//         // if it isn't a primitive value, then it is a common object
+//         (!isNumber(value) &&
+//             !isString(value) &&
+//             !isBoolean(value) &&
+//             !isArray(value) &&
+//             !isNull(value) &&
+//             !isFunction(value) &&
+//             !isUndefined(value) &&
+//             !isSymbol(value)
+//         )
+//     );
+// }
 export function isFunction(value) {
     return Object.prototype.toString.call(value) == '[object Function]';
 }
-export function isElement(value) {
-    return (
-        typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
-        value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName === "string"
-    );
-}
+// export function isElement(value) {
+//     return (
+//         typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
+//         value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName === "string"
+//     );
+// }
 
 /**
  * HTML encode a string
  * @param string text
  * @return string
  */
-export function htmlEncode(text) {
-    return document.createElement('a').appendChild(document.createTextNode(text)).parentNode.innerHTML;
-}
+// export function htmlEncode(text) {
+//     return document.createElement('a').appendChild(document.createTextNode(text)).parentNode.innerHTML;
+// }
 
 /**
  * get an object's all keys ignore whether they are not enumerable
@@ -211,7 +207,7 @@ export function getUniqueId() {
  */
 export function setStorage (key, value) {
     if (!window.localStorage) return
-    key = '__LogTracer_' + key
+    key = '__SyncConsole_' + key
     let status = true
     try {
         localStorage.setItem(key, value)
@@ -224,6 +220,6 @@ export function setStorage (key, value) {
 
 export function getStorage (key) {
     if (!window.localStorage) return
-    key = '__LogTracer_' + key
+    key = '__SyncConsole_' + key
     return localStorage.getItem(key)
 }
