@@ -20,7 +20,6 @@
     width: 100%;
 }
 .rd-console-app-table-header {
-    background: #f7f7f7;
     display: flex;
     padding: 5px 10px;
 }

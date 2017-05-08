@@ -11,12 +11,11 @@ const syncConsoleManager = new window.SyncConsole.default({
     clickCount: 5, // in 10s
 
     // for sync console
+    // project: 'some IM',
     maxLogCount: 50,
-    server: 'https://sync-console-server-fhzqxtoggp.now.sh/',
+    server: 'http://sync.bood.in/',
     Vue: Vue
 })
-
-console.log(window.syncConsoleManager = syncConsoleManager)
 
  // eslint-disable-next-line
 const app = new Vue({
@@ -26,7 +25,7 @@ const app = new Vue({
     },
     mounted () {
         console.log('app mounted')
-        this.show()
+        // this.show()
     },
     methods: {
         show () {

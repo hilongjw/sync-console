@@ -5,9 +5,10 @@
     left: 0;
     height: 40%;
     width: 100%;
+    box-shadow: 1px -11px 16px 0px rgba(0, 0, 0, 0.05);
 }
 .rd-console-header {
-    background: #673AB7;
+    /*background: #673AB7;*/
     font-size: 13px;
     color: #fff;
     padding-right: 30px;
@@ -20,6 +21,7 @@
     font-size: 16px;
     line-height: 26px;
     width: 20px;
+    color: #ccc;
 }
 .rd-console-header-actions {
     display: flex;
@@ -40,7 +42,7 @@
 
 /* global */
 .rd-console .hover-black:hover {
-    background: rgba(0, 0, 0, 0.15);
+    background: #f1f1f1;
     cursor: pointer;
 }
 .rd-console .hover-shadow:hover {
@@ -138,10 +140,6 @@ export default {
             }, {
                 text: 'Application',
                 router: { name: 'application' },
-                active: false
-            }, {
-                text: 'Report',
-                router: { name: 'report' },
                 active: false
             }]
         }

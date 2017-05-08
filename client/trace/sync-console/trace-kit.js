@@ -2,7 +2,8 @@
 /*eslint-disable*/
 
 import {
-    isError
+    isError,
+    getLocationHref
 } from '../utils'
 /*
  TraceKit - Cross brower stack traces
@@ -30,12 +31,6 @@ var UNKNOWN_FUNCTION = '?';
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Error_types
 var ERROR_TYPES_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/;
 
-function getLocationHref() {
-    if (typeof document === 'undefined' || typeof document.location === 'undefined')
-        return '';
-
-    return document.location.href;
-}
 
 /**
  * TraceKit.computeStackTrace: cross-browser stack traces in JavaScript

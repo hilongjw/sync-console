@@ -1,13 +1,15 @@
 import Event from './event'
+import { getLocationHref } from '../utils'
 
 let io
 class SocketClient extends Event {
-    constructor ({ nsp, token }) {
+    constructor ({ nsp, token, project }) {
         super()
         this.token = token
         this.remote = false
         this.client = null
         this.nsp = nsp
+        this.project = project || getLocationHref()
         this.target = ''
         this.clientQueue = []
     }
@@ -87,7 +89,8 @@ class SocketClient extends Event {
 
         this.$emit('system', (system) => {
             this.client.emit('client:init', {
-                system: system
+                system: system,
+                project: this.project
             })
         })
 

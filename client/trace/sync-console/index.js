@@ -48,7 +48,8 @@ class SyncConsole extends Event {
         })
         this.initClient({
             nsp: this.options.server + 'sync-console',
-            token: this.token
+            token: this.token,
+            project: this.options.project
         })
     }
 

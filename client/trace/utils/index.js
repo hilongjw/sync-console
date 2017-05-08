@@ -16,6 +16,18 @@ export function isError (value) {
 }
 
 /*
+* getLocationHref
+* @param
+* @return  string
+*/
+export function getLocationHref() {
+    if (typeof document === 'undefined' || typeof document.location === 'undefined')
+        return '';
+
+    return document.location.href;
+}
+
+/*
 * getParams 
 * rewrite
 * http://stackoverflow.com/questions/10126956/capture-value-out-of-query-string-with-regex
@@ -43,22 +55,34 @@ export function getParams (str, mutli) {
    }
    return params;
 }
+/**
+ * pad num
+ * @param  int  num
+ * @return  string
+ */
+export function pad (num) {
+  if (num < 10) return '0' + num
+  return num
+}
 
 /**
  * get formatted date by timestamp
  * @param  int    time
  * @return  object
  */
-export function getDate(time) {
-    let d = time > 0 ? new Date(time) : new Date();
-    let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate(),
-        month = d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1),
-        year = d.getFullYear(),
-        hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours(),
-        minute = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes(),
-        second = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds(),
-        millisecond = d.getMilliseconds() < 10 ? '0' + d.getMilliseconds() : d.getMilliseconds();
-    if (millisecond < 100) { millisecond = '0' + millisecond; }
+export function getDate (time) {
+    const d = time > 0 ? new Date(time) : new Date()
+    const day = pad(d.getDate())
+    const month = pad(d.getMonth() + 1)
+    const year = pad(d.getFullYear())
+    const hour = pad(d.getHours())
+    const minute = pad(d.getMinutes())
+    const second = pad(d.getSeconds())
+    let millisecond = pad(d.getMilliseconds())
+    if (millisecond < 100) {
+      millisecond = '0' + millisecond
+    }
+
     return {
         time: (+d),
         year: year,
@@ -68,7 +92,15 @@ export function getDate(time) {
         minute: minute,
         second: second,
         millisecond: millisecond
-    };
+    }
+}
+
+/*
+* formart date
+*/
+export function formatTime (time) {
+  const date = getDate(time)
+  return date.year + '-' + date.month + '-' + date.day + ' ' + date.hour + ':' + date.minute + ':' + date.second
 }
 
 /**
@@ -76,51 +108,51 @@ export function getDate(time) {
  * @param mixed value
  * @return boolean
  */
-// export function isNumber(value) {
-//     return Object.prototype.toString.call(value) == '[object Number]';
-// }
-// export function isString(value) {
-//     return Object.prototype.toString.call(value) == '[object String]';
-// }
-// export function isArray(value) {
-//     return Object.prototype.toString.call(value) == '[object Array]';
-// }
-// export function isBoolean(value) {
-//     return Object.prototype.toString.call(value) == '[object Boolean]';
-// }
-// export function isUndefined(value) {
-//     return Object.prototype.toString.call(value) == '[object Undefined]';
-// }
-// export function isNull(value) {
-//     return Object.prototype.toString.call(value) == '[object Null]';
-// }
-// export function isSymbol(value) {
-//     return Object.prototype.toString.call(value) == '[object Symbol]';
-// }
-// export function isObject(value) {
-//     return (
-//         Object.prototype.toString.call(value) == '[object Object]' ||
-//         // if it isn't a primitive value, then it is a common object
-//         (!isNumber(value) &&
-//             !isString(value) &&
-//             !isBoolean(value) &&
-//             !isArray(value) &&
-//             !isNull(value) &&
-//             !isFunction(value) &&
-//             !isUndefined(value) &&
-//             !isSymbol(value)
-//         )
-//     );
-// }
+export function isNumber(value) {
+    return Object.prototype.toString.call(value) == '[object Number]';
+}
+export function isString(value) {
+    return Object.prototype.toString.call(value) == '[object String]';
+}
+export function isArray(value) {
+    return Object.prototype.toString.call(value) == '[object Array]';
+}
+export function isBoolean(value) {
+    return Object.prototype.toString.call(value) == '[object Boolean]';
+}
+export function isUndefined(value) {
+    return Object.prototype.toString.call(value) == '[object Undefined]';
+}
+export function isNull(value) {
+    return Object.prototype.toString.call(value) == '[object Null]';
+}
+export function isSymbol(value) {
+    return Object.prototype.toString.call(value) == '[object Symbol]';
+}
+export function isObject(value) {
+    return (
+        Object.prototype.toString.call(value) == '[object Object]' ||
+        // if it isn't a primitive value, then it is a common object
+        (!isNumber(value) &&
+            !isString(value) &&
+            !isBoolean(value) &&
+            !isArray(value) &&
+            !isNull(value) &&
+            !isFunction(value) &&
+            !isUndefined(value) &&
+            !isSymbol(value)
+        )
+    );
+}
 export function isFunction(value) {
     return Object.prototype.toString.call(value) == '[object Function]';
 }
-// export function isElement(value) {
-//     return (
-//         typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
-//         value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName === "string"
-//     );
-// }
+export function isElement(value) {
+    return (
+        typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
+        value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName === "string"
+    );
+}
 
 /**
  * HTML encode a string

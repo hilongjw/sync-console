@@ -2,10 +2,12 @@
 .rd-console-action-tap {
     line-height: 30px;
     padding: 0 10px;
+    color: #6b6b6b;
     -webkit-font-smoothing: antialiased;
 }
-.rd-console-action-tap.active{
-    border-bottom: 2px solid #fff;
+.rd-console-action-tap.active {
+    border-bottom: 2px solid #3ae9ff;
+    color: #09e0fb;
 }
 </style>
 

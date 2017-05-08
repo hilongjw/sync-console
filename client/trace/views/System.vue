@@ -5,7 +5,6 @@
     width: calc(100vw - 150px);
 }
 .rd-console-app-navs {
-    background: #f7f7f7;
     width: 150px;
     flex-shrink: 0;
 }
@@ -20,7 +19,6 @@
     width: 100%;
 }
 .rd-console-app-table-header {
-    background: #f7f7f7;
     display: flex;
     padding: 5px 10px;
 }
@@ -34,6 +32,8 @@
 .rd-console-app-table-hd-key {
     width: 100px;
     flex-shrink: 0;
+    color: #8a8a8a;
+    font-size: 12px;
 }
 .rd-console-app-table-val,
 .rd-console-app-table-hd-val {

@@ -1,6 +1,6 @@
 <style>
 .rd-console-item {
-    line-height: 1.7;
+    line-height: 2.6;
     font-size: 13px;
     padding: 0 10px;
     border-bottom: 1px solid #f1f1f1;

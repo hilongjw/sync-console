@@ -16,6 +16,32 @@
     flex: 1;
     -webkit-margin-start: 0;
 }
+
+.rd-console-network-row {
+    display: flex;
+    line-height: 1.7;
+    padding: 5px 10px;
+    border-bottom: 1px solid #f2f2f2;
+    justify-content: space-between;
+    margin: 0;
+}
+.rd-console-net-detail-row {
+    display: flex;
+    font-size: 12px;
+}
+.rd-console-net-detail-row-col-key {
+    font-weight: 600;
+    margin-right: 10px;
+}
+.rd-console-network-item-title {
+    font-size: 14px;
+    padding: 10px 0;
+    font-weight: 600;
+}
+.rd-console-network-item-detail {
+    padding: 10px;
+    box-sizing: border-box;
+}
 </style>
 <template>
     <div class="rd-console-view rd-console-network">

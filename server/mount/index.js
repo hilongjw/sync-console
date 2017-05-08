@@ -7,7 +7,7 @@ const isJS = /\.js/
 
 function parseService (service, servicePath) {
     return {
-        method: service.method ||'get',
+        method: service.method || 'get',
         path: servicePath,
         handler: service.handler
     }
@@ -21,7 +21,7 @@ function flatten (arr) {
 function loadService (filePath) {
     const mod = require(filePath)
 
-    if (!mod instanceof(Object)) throw new Error('failed at loadService: module must export object')
+    if (!(mod instanceof Object)) throw new Error('failed at loadService: module must export object')
 
     const serviceList = Object.keys(mod).map(servicePath => {
         return parseService(mod[servicePath], servicePath)

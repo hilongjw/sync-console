@@ -25,13 +25,23 @@
 }
 .rd-console-remote-client-list {
     background: #fff;
-    /*box-shadow: 1px 4px 9px 2px #ccc;*/
     padding: 10px;
     border-radius: 4px;
 }
 .rd-console-remote-client {
     line-height: 30px;
-    border-bottom: 1px solid #ccc;
+    padding: 5px 10px;
+    box-shadow: 1px 1px 2px rgba(10, 10, 10, 0.4);
+    margin-bottom: 5px;
+    background: #fff;
+    word-break: break-all;
+    cursor: pointer;
+}
+.rd-console-remote-client:hover {
+    background: #f7f7f7;
+}
+.rd-console-remote-client-key {
+    color: #696969;
 }
 </style>
 
@@ -39,7 +49,24 @@
     <div class="rd-console-view rd-console-console">
         <div class="rd-console-remote-client-list">
             <div class="rd-console-remote-client" v-for="client in clientList" @click="choose(client)" >
-                {{ 'system: ' + client.system.system  }}
+                <div class="rd-console-remote-client-row">
+                    <span class="rd-console-remote-client-key">
+                        project: 
+                    </span>
+                    <span>{{ client.project  }}</span>
+                </div>
+                <div class="rd-console-remote-client-row">
+                    <span class="rd-console-remote-client-key">
+                        system: 
+                    </span>
+                    <span>{{ client.system.system }}</span>
+                </div>
+                <div class="rd-console-remote-client-row">
+                    <span class="rd-console-remote-client-key">
+                        UA: 
+                    </span>
+                    <span>{{ client.system.UA }}</span>
+                </div>
             </div>
         </div>
     </div>

@@ -1,27 +1,8 @@
 <style>
-.rd-console-network-row {
-     display: flex;
-     line-height: 1.7;
-     padding: 5px 10px;
-     border-bottom: 1px solid #f2f2f2;
-     justify-content: space-between;
-}
-.rd-console-net-detail-row {
-    display: flex;
-    font-size: 12px;
-}
-.rd-console-net-detail-row-col-key {
-    font-weight: 600;
-    margin-right: 10px;
-}
-.rd-console-network-item-title {
-    font-size: 14px;
-    padding: 10px 0;
-    font-weight: 600;
-}
-.rd-console-network-item-detail {
+.rd-console-network-item-response {
+    background: #f3f3f3;
     padding: 10px;
-    box-sizing: border-box;
+    color: #484848;
 }
 </style>
 
@@ -57,7 +38,7 @@
             <div class="rd-console-network-item-title">
                     Response
             </div>
-            <div>
+            <div class="rd-console-network-item-response">
                 {{ data.response }}
             </div>
         </div>
