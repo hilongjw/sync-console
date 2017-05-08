@@ -12,7 +12,7 @@ const logTracer = new window.LogTracer.default({
 
     // for sync console
     maxLogCount: 50,
-    server: 'http://local.igetget.com:9999/', // 'https://sync-console-server-qyverkhjyq.now.sh/',
+    server: 'https://sync-console-server-fhzqxtoggp.now.sh/',
     Vue: Vue
 })
 

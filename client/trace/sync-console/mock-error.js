@@ -18,7 +18,7 @@ class MockError extends Event {
     VueErrorHandler (error, vm, info) {
         const stack = TraceKit.computeStackTrace(error)
         if (!stack) {
-            return console.log('simple report')
+            return console.error(error, stringifyVue('', vm), info)
         }
         let lineNo
         let colNo
@@ -46,7 +46,7 @@ class MockError extends Event {
         this.windowOnError = window.onerror
         window.onerror = (message, source, lineNo, colNo, error) => {
             const stack = error && TraceKit.computeStackTrace(error)
-            if (!stack) return console.log('simple report')
+            if (!stack) return console.error(message, source, lineNo, colNo, error)
 
             const err = {
                 name: stack.name,

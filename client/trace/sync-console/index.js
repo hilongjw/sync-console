@@ -13,6 +13,7 @@ class SyncConsole extends Event {
     constructor (options) {
         super()
         this.options = options
+
         const query = getParams()
 
         this.token = query._sync_console_token
@@ -40,7 +41,9 @@ class SyncConsole extends Event {
 
         this.initConsole()
         this.initNetWork()
-        this.initMockError()
+        this.initMockError({
+            Vue: this.options.Vue
+        })
         this.initClient({
             nsp: this.options.server + 'sync-console',
             token: this.token
@@ -84,10 +87,10 @@ class SyncConsole extends Event {
         })
     }
 
-    initMockError () {
-        this.mockError = new MockError()
+    initMockError (options) {
+        this.mockError = new MockError(options)
         this.mockError.$on('update', (err) => {
-            err && console.error(err)
+            console.error(err)
             this.$emit('new-error')
         })
     }
