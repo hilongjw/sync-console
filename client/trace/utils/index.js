@@ -15,6 +15,35 @@ export function isError (value) {
   }
 }
 
+/*
+* getParams 
+* rewrite
+* http://stackoverflow.com/questions/10126956/capture-value-out-of-query-string-with-regex
+*/
+export function getParams (str, mutli) {
+   var queryString = str || window.location.search || '';
+   var keyValPairs = [];
+   var params      = {};
+   queryString     = queryString.replace(/.*?\?/,"");
+
+   if (queryString.length)
+   {
+      keyValPairs = queryString.split('&');
+      for (let pairNum in keyValPairs)
+      {
+         var key = keyValPairs[pairNum].split('=')[0];
+         if (!key.length) continue;
+         if (mutli) {
+            if (typeof params[key] === 'undefined') params[key] = [];
+            params[key].push(keyValPairs[pairNum].split('=')[1]);
+         } else {
+            params[key] = keyValPairs[pairNum].split('=')[1]
+         }
+      }
+   }
+   return params;
+}
+
 /**
  * get formatted date by timestamp
  * @param  int    time

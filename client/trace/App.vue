@@ -143,10 +143,6 @@ export default {
                 text: 'Report',
                 router: { name: 'report' },
                 active: false
-            }, {
-                text: 'Remote',
-                router: { name: 'remote' },
-                active: false
             }]
         }
     },
@@ -174,6 +170,13 @@ export default {
         },
         hide () {
             this.state.show = false
+        },
+        startRemote () {
+            this.tabs.push({
+                text: 'Remote',
+                router: { name: 'remote' },
+                active: false
+            })
         },
         resizeStart (e) {
             this.size.scacle = true

@@ -1,4 +1,4 @@
-import { checkFlag } from './utils'
+import { getParams } from './utils'
 import SyncConsole from './sync-console'
 
 const defaultOptions = {
@@ -14,11 +14,9 @@ class LogTracer {
         this.state = {
             clickCount: 0
         }
+        this.query = getParams()
 
-        this.syncConsole = new SyncConsole({
-            server: 'http://127.0.0.1:8855/',
-            Vue: options.Vue
-        })
+        this.syncConsole = new SyncConsole(options)
 
         const el = window.document.body.querySelector(this.options.el)
 
@@ -33,7 +31,7 @@ class LogTracer {
     }
 
     check () {
-        if (checkFlag()) {
+        if (this.query._sync_console_show) {
             this.show()
         }
     }
@@ -53,15 +51,25 @@ class LogTracer {
         }
     }
 
-    show () {
-        clearInterval(this.timer)
-        // for async load log ui
-        if (this.app) return this.app.show()
-
-        import('./app')
+    loadApp () {
+        if (this.app) return Promise.resolve(this.app)
+        return import('./app')
             .then(module => {
                 this.app = module.install(this.syncConsole)
-                this.app.show()
+                return this.app
+            })
+    }
+
+    // for async load log ui
+    show () {
+        clearInterval(this.timer)
+
+        this.loadApp()
+            .then(app => {
+                app.show()
+                if (this.query._sync_console_token) {
+                    app.startRemote()
+                }
             })
     }
 

@@ -2,8 +2,9 @@ import Event from './event'
 
 let io
 class SocketClient extends Event {
-    constructor (nsp) {
+    constructor ({ nsp, token }) {
         super()
+        this.token = token
         this.remote = false
         this.client = null
         this.nsp = nsp
@@ -33,7 +34,7 @@ class SocketClient extends Event {
 
     loadClients () {
         this.client.emit('admin:init-req', {
-            token: 'token'
+            token: this.token
         })
 
         this.client.on('admin:init-res', (clients) => {
@@ -61,7 +62,7 @@ class SocketClient extends Event {
 
         this.client.emit('admin:sync-req', {
             target: target,
-            token: 'token'
+            token: this.token
         })
 
         this.client.on('admin:sync-init', data => {
@@ -75,7 +76,7 @@ class SocketClient extends Event {
         this.$on('run-code-remote', code => {
             this.client.emit('admin:run-code', {
                 code: code,
-                token: 'token',
+                token: this.token,
                 target: this.target
             })
         })
@@ -96,7 +97,6 @@ class SocketClient extends Event {
 
             this.$emit('ask-data', (err, vm) => {
                 if (err) return
-                console.log('will init')
 
                 this.client.emit('client:sync-init', {
                     target: this.target,

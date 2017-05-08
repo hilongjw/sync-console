@@ -9,9 +9,10 @@ document.body.appendChild(el)
 const logTracer = new window.LogTracer.default({
     el: '#ddd', // default window
     clickCount: 5, // in 10s
+
+    // for sync console
     maxLogCount: 50,
-    server: 'http://127.0.0.1:8855/',
-    report: 'http://192.168.18.39:8855/api/error-log',
+    server: 'http://local.igetget.com:9999/', // 'https://sync-console-server-qyverkhjyq.now.sh/',
     Vue: Vue
 })
 
@@ -27,7 +28,7 @@ const app = new Vue({
     },
     methods: {
         show () {
-            // console.log(this.a.b)
+            console.log(this.a.b)
         }
     }
 })

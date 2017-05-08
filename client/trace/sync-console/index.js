@@ -5,6 +5,7 @@ import MockError from './mock-error'
 import SocketClient from './socket-client'
 import SystemInfo from './system'
 import TraceKit from './trace-kit'
+import { getParams } from '../utils'
 
 TraceKit.collectWindowErrors = false
 
@@ -12,6 +13,10 @@ class SyncConsole extends Event {
     constructor (options) {
         super()
         this.options = options
+        const query = getParams()
+
+        this.token = query._sync_console_token
+        this.show = query._sync_console_show
 
         this.remoteMode = false
 
@@ -36,7 +41,10 @@ class SyncConsole extends Event {
         this.initConsole()
         this.initNetWork()
         this.initMockError()
-        this.initClient()
+        this.initClient({
+            nsp: this.options.server + 'sync-console',
+            token: this.token
+        })
     }
 
     initConsole () {
@@ -79,15 +87,13 @@ class SyncConsole extends Event {
     initMockError () {
         this.mockError = new MockError()
         this.mockError.$on('update', (err) => {
-            console.log(err)
-            this.$emit('newError')
+            err && console.error(err)
+            this.$emit('new-error')
         })
     }
 
-    initClient () {
-        this.scoketClient = new SocketClient({
-            nsp: this.options.server + 'sync-console'
-        })
+    initClient (options) {
+        this.scoketClient = new SocketClient(options)
 
         this.scoketClient.init()
 
@@ -155,11 +161,11 @@ class SyncConsole extends Event {
         if (this.remoteSync) {
             return this.scoketClient.$emit('run-code-remote', code)
         }
-        console.info(code)
+        console.log(code)
         try {
             // eslint-disable-next-line
             let result = eval(code)
-            console.info(result)
+            console.log(result)
         } catch (e) {
             console.error(TraceKit.computeStackTrace(e))
         }
