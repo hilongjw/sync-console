@@ -3,6 +3,8 @@ import SyncConsole from './sync-console'
 
 const defaultOptions = {
     maxLogCount: 50,
+    duration: 3 * 1000,
+    clickCount: 10,
     server: '/',
     Vue: null
 }
@@ -18,16 +20,20 @@ class SyncConsoleManager {
 
         this.syncConsole = new SyncConsole(options)
 
-        const el = window.document.body.querySelector(this.options.el)
+        if (this.options.el) this.mount(this.options.el)
+        this.check()
+    }
 
-        if (!el) {
-            console.warn('invalid el selector with LogTracer')
-        } else {
+    mount (selector) {
+        let el
+        try {
+            el = window.document.body.querySelector(selector)
+        } catch (e) {
+            console.error(e)
+        }
+        if (el) {
             el.addEventListener('click', this.clickMark.bind(this))
         }
-
-        this.startReset()
-        this.check()
     }
 
     check () {
@@ -40,14 +46,18 @@ class SyncConsoleManager {
         clearInterval(this.timer)
         this.timer = setInterval(() => {
             this.state.clickCount = 0
-        }, 10 * 1000)
+        }, this.options.duration)
     }
 
     clickMark () {
+        if (!this.timer) this.startReset()
         this.state.clickCount++
+
         if (this.state.clickCount > this.options.clickCount) {
             this.show()
-            this.options.clickCount = 0
+            this.state.clickCount = 0
+            clearInterval(this.timer)
+            this.timer = undefined
         }
     }
 
@@ -55,7 +65,6 @@ class SyncConsoleManager {
         if (this.app) return Promise.resolve(this.app)
         return import('./app')
             .then(module => {
-                console.log(module)
                 this.app = module.install(this.syncConsole)
                 return this.app
             })
@@ -63,8 +72,6 @@ class SyncConsoleManager {
 
     // for async load log ui
     show () {
-        clearInterval(this.timer)
-
         this.loadApp()
             .then(app => {
                 app.show()
@@ -75,7 +82,6 @@ class SyncConsoleManager {
     }
 
     hide () {
-        this.startReset()
         this.app.hide()
     }
 }

@@ -58,6 +58,7 @@
     font-size: 13px;
     padding: 0 20px;
     outline: none;
+    margin: 0;
 }
 .rd-console-btn.highlight {
     background: #673ab7;
@@ -170,6 +171,10 @@ export default {
             this.state.show = false
         },
         startRemote () {
+            for (let i = 0, len = this.tabs.length; i < len; i++) {
+                if (this.tabs[i].text === 'Remote') return
+            }
+
             this.tabs.push({
                 text: 'Remote',
                 router: { name: 'remote' },

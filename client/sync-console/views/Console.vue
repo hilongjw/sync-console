@@ -42,6 +42,7 @@ import Log from '../components/LogViewer.vue'
 export default {
     data () {
         return {
+            $list: null,
             command: '',
             logQueue: this.$syncConsole.logQueue.slice()
         }
@@ -55,10 +56,14 @@ export default {
         })
         this.$syncConsole.$on('update-log', log => {
             this.logQueue.push(log)
+            this.$nextTick(() => {
+                this.listToBottom()
+            })
         })
         this.$syncConsole.$on('init-log', list => {
             this.logQueue = list
         })
+        this.$list = document.body.querySelector('.rd-console-body')
     },
     beforeDestroy () {
         this.$syncConsole.$off('update-log')
@@ -66,6 +71,10 @@ export default {
         this.$syncConsole.$off('init-log')
     },
     methods: {
+        listToBottom () {
+            if (!this.$list) return
+            this.$list.scrollTop = this.$list.scrollHeight
+        },
         fire () {
             this.$syncConsole.execCommand(this.command)
             this.command = ''

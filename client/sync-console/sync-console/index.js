@@ -5,6 +5,7 @@ import MockError from './mock-error'
 import SocketClient from './socket-client'
 import SystemInfo from './system'
 import TraceKit from './trace-kit'
+import History from './history'
 import { getParams } from '../utils'
 
 TraceKit.collectWindowErrors = false
@@ -20,9 +21,10 @@ class SyncConsole extends Event {
         this.show = query._sync_console_show
 
         this.remoteMode = false
+        this._history = new History()
 
         this.logQueue = []
-        this.historyQueue = []
+        this.historyQueue = this._history.queue
         this.netWorkQueue = []
         this.clientQueue = []
 

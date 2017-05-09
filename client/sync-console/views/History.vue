@@ -23,12 +23,12 @@ export default {
         Log
     },
     mounted () {
-        this.$syncConsole.$on('newLog', log => {
+        this.$syncConsole.$on('update-log', log => {
             this.historyQueue.push(log)
         })
     },
     beforeDestroy () {
-        this.$syncConsole.$off('newLog')
+        this.$syncConsole.$off('update-log')
     },
     methods: {
         clear () {

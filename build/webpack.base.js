@@ -11,8 +11,7 @@ module.exports = {
         publicPath: '/',
         filename: buildConfig.filename,
         chunkFilename: buildConfig.chunkFilename,
-        library: 'SyncConsole',
-        libraryTarget: 'umd'
+        libraryTarget: 'this'
     },
     resolve: {
         extensions: ['.js', '.vue', '.css']

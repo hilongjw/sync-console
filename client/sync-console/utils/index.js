@@ -238,7 +238,7 @@ export function getUniqueId() {
  * localStorage methods
  */
 export function setStorage (key, value) {
-    if (!window.localStorage) return
+    if (!window.localStorage) return false
     key = '__SyncConsole_' + key
     let status = true
     try {

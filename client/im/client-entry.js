@@ -6,16 +6,18 @@ el.setAttribute('style', 'height: 20px; width: 20px; background: red;')
 document.body.appendChild(el)
 
 // eslint-disable-next-line
-const syncConsoleManager = new window.SyncConsole.default({
-    el: '#ddd', // default window
-    clickCount: 5, // in 10s
+const syncConsoleManager = new window.SyncConsoleManager({
+    clickCount: 6, // in 3s
 
     // for sync console
-    // project: 'some IM',
+    project: 'sync test',
     maxLogCount: 50,
-    server: 'http://sync.bood.in/',
+    cdn: 'http://sync.bood.in/',
+    server: 'http://127.0.0.1:9999/', // 'http://sync.bood.in/',
     Vue: Vue
 })
+
+syncConsoleManager.mount('#ddd')
 
  // eslint-disable-next-line
 const app = new Vue({
