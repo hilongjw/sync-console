@@ -1,5 +1,7 @@
-# UMIM
-对接所有信息渠道
+# SyncConsole SDK
+
+前端远程实时调试 SDK
+
 
 ## Build Setup
 
@@ -12,9 +14,6 @@ npm run dev
 
 # build for production with minification
 npm run build
-
-# run app
-npm start
 ```
 
 ## Directory
