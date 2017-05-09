@@ -8,7 +8,6 @@ export default class History {
         this.queue.push = (item) => {
             if (this.queue.length > maxLogCount) {
                 while (this.queue.length > maxLogCount) {
-                    console.debug(this.queue.length, maxLogCount)
                     this.queue.shift()
                 }
             }

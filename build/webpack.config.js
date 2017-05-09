@@ -8,6 +8,12 @@ const developmentConf = merge(baseConfig, {
     entry: getEntries(webpackHotMiddlewareConfig, ['components', 'assets', 'lib']),
     devtool: 'eval',
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"',
+                __SYNC_CONSOLE_PATH_: '"/"'
+            }
+        }),
         new webpack.LoaderOptionsPlugin({
             vue: {
                 postcss: [

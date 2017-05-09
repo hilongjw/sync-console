@@ -1,10 +1,10 @@
-const webpack = require('webpack');
-const path = require('path')
+const webpack = require('webpack')
+// const path = require('path')
 const merge = require('webpack-merge')
 const baseConfig = require('./webpack.base')
 const getEntries = require('./getEntries')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const BunddleInsert = require('./bunddleInsert')
 
 const productionConf = merge(baseConfig, {
@@ -13,7 +13,8 @@ const productionConf = merge(baseConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: '"production"'
+                NODE_ENV: '"production"',
+                __SYNC_CONSOLE_PATH_: '"http://sync.bood.in/"'
             }
         }),
         new webpack.optimize.UglifyJsPlugin({
