@@ -32,6 +32,7 @@
 .rd-console-app-table-key,
 .rd-console-app-table-hd-key {
     flex: 1;
+    overflow: auto;
 }
 .rd-console-app-table-val,
 .rd-console-app-table-hd-val {

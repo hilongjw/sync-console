@@ -80,7 +80,8 @@ export default {
             this.command = ''
         },
         clear () {
-            this.$syncConsole.clear()
+            window.aa = this
+            this.logQueue = []
         }
     }
 }

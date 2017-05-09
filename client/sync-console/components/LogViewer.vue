@@ -43,13 +43,13 @@
     color: #624100;
 }
 .rd-console-item.rd-log-type-error::before {
-    content: 'x';
+    content: '×';
     background: #F44336;
     border-radius: 50%;
     display: inline-block;
     width: 12px;
     height: 12px;
-    line-height: 12px;
+    line-height: 9px;
     color: #fff;
     font-size: 10px;
     text-align: center;

@@ -21,7 +21,7 @@ class SyncConsole extends Event {
         this.show = query._sync_console_show
 
         this.remoteMode = false
-        this._history = new History()
+        this._history = new History(this.options)
 
         this.logQueue = []
         this.historyQueue = this._history.queue
