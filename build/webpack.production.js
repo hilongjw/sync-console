@@ -20,6 +20,9 @@ const productionConf = merge(baseConfig, {
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
+            },
+            output: {
+                comments: false
             }
         }),
         new OptimizeCssAssetsPlugin({
