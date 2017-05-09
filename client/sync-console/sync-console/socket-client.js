@@ -45,12 +45,10 @@ class SocketClient extends Event {
         })
 
         this.client.on('admin:add-client', client => {
-            console.log('admin:add-client')
             this.addClient(client)
         })
 
         this.client.on('admin:remove-client', client => {
-            console.log('admin:remove-client')
             this.removeClient(client)
         })
     }

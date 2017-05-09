@@ -6,6 +6,12 @@ const getEntries = require('./getEntries')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 // const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const BunddleInsert = require('./bunddleInsert')
+const version = process.env.VERSION || require('../package.json').version
+
+const banner =
+  'SyncConsole.js v' + version + '\n' +
+  '(c) ' + new Date().getFullYear() + ' Awe <hilongjw@gmail.com>\n' +
+  'Released under the MIT License.\n'
 
 const productionConf = merge(baseConfig, {
     entry: getEntries(null, ['components', 'assets', 'lib'], false),
@@ -45,11 +51,8 @@ const productionConf = merge(baseConfig, {
                 }
             }
         }),
-        new BunddleInsert()
-        // new ExtractTextPlugin({
-        //     filename: 'css/[name]-[hash].css',
-        //     allChunks: true
-        // })
+        new BunddleInsert(),
+        new webpack.BannerPlugin(banner)
     ]
 })
 

@@ -79,8 +79,10 @@ class MockXhr extends Event {
         window.XMLHttpRequest.prototype.open = function (...args) {
             let XMLReq = this
             let url = args[1]
+
             const _onprogress = this.onprogress || noop
             const _onload = this.onload || noop
+
             XMLReq._requestId = getUniqueId()
             XMLReq._URL = url
 

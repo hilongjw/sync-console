@@ -6,7 +6,6 @@ var path = require('path')
 var ora = require('ora')
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.production')
-var webpackServer = require('./webpack.server')
 
 var spinner = ora('building for production...')
 spinner.start()
