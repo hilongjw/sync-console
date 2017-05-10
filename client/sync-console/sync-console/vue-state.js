@@ -265,7 +265,7 @@ function getInstanceDetails (instance) {
         }
         return {
             id: instance._uid,
-            isVue: true,
+            _isVue: true,
             name: getInstanceName(instance),
             state: processProps(instance).concat(
                 processState(instance),
@@ -281,9 +281,4 @@ function getInstanceDetails (instance) {
 export default function stringifyVue (key, val) {
     if (!val || !val._isVue) return val
     return getInstanceDetails(val)
-    // return {
-    //     name: `[Vue instance] <${getInstanceName(val)}> `,
-    //     state: processState(val),
-    //     $route: processRouteContext(val)
-    // }
 }
