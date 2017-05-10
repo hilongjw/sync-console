@@ -1,6 +1,6 @@
 {
-  "name": "uim",
-  "version": "0.0.1",
+  "name": "sync-console",
+  "version": "0.0.2",
   "main": "index.js",
   "description": "umoon im project",
   "author": "",
