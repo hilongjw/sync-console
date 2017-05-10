@@ -1,7 +1,7 @@
 /*eslint-disable*/
 /**
  *
- * fork from WechatFE vconsole util
+ * fork from WechatFE vconsole util under MIT
  */
 
 // Yanked from https://git.io/vS8DV re-used under CC0
@@ -217,12 +217,6 @@ export function getType(val) {
     if (typeof val === 'undefined') return 'undefined'
     if (typeof val === 'object' && !val) return 'null'
     return ({}).toString.call(val).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
-}
-
-const debugFlag = /__logtracer=/
-export function checkFlag() {
-    const str = window.location.search || ''
-    return debugFlag.test(str)
 }
 
 export function getUniqueId() {
