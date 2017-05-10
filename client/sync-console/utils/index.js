@@ -2,7 +2,26 @@
 /**
  *
  * fork from WechatFE vconsole util under MIT
+ * fork from https://github.com/vuejs/vue-devtools/blob/master/src/util.js
+ * fork from raven sdk
  */
+
+export function cached (fn) {
+    const cache = Object.create(null)
+    return function cachedFn (str) {
+        const hit = cache[str]
+        return hit || (cache[str] = fn(str))
+    }
+}
+
+const camelizeRE = /-(\w)/g
+export const camelize = cached((str) => {
+    return str.replace(camelizeRE, toUpper)
+})
+
+export function toUpper (_, c) {
+    return c ? c.toUpperCase() : ''
+}
 
 // Yanked from https://git.io/vS8DV re-used under CC0
 // with some tiny modifications

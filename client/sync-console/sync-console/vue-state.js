@@ -1,43 +1,11 @@
+import { camelize } from '../utils'
+
 function basename (filename) {
     return filename.replace(/\/.*\//, '')
 }
 
 let isLegacy = false
 const propModes = ['default', 'sync', 'once']
-
-function cached (fn) {
-    const cache = Object.create(null)
-    return function cachedFn (str) {
-        const hit = cache[str]
-        return hit || (cache[str] = fn(str))
-    }
-}
-
-const camelizeRE = /-(\w)/g
-export const camelize = cached((str) => {
-    return str.replace(camelizeRE, toUpper)
-})
-
-function toUpper (_, c) {
-    return c ? c.toUpperCase() : ''
-}
-
-// function processState (instance) {
-//     return instance._data
-// }
-
-// function processRouteContext (instance) {
-//     const route = instance.$route
-//     if (route) {
-//         const { path, query, params } = route
-//         const value = { path, query, params }
-//         if (route.fullPath) value.fullPath = route.fullPath
-//         if (route.hash) value.hash = route.hash
-//         if (route.name) value.name = route.name
-//         if (route.meta) value.meta = route.meta
-//         return value
-//     }
-// }
 
 function getInstanceName (instance) {
     const name = instance.$options.name || instance.$options._componentTag

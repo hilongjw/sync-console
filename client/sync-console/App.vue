@@ -151,7 +151,6 @@ export default {
     },
     mounted () {
         this.$router.push({ name: 'console' })
-        console.log(this)
         window.addEventListener('mouseup', this.resizeEnd)
         window.addEventListener('mousemove', this.resizing)
         window.addEventListener('touchmove', this.resizing)
