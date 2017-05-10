@@ -3,6 +3,7 @@ const SystemInfo = {
         return {
             UA: navigator.userAgent,
             system: SystemInfo.system(),
+            browser: SystemInfo.browser(),
             wechat: SystemInfo.wechat(),
             network: SystemInfo.network()
         }
@@ -10,6 +11,32 @@ const SystemInfo = {
 
     info (cb) {
         this.performance(this.init(), cb)
+    },
+
+    browser () {
+        const UA = navigator.userAgent
+        let result = ''
+
+        const chrome = UA.match(/(chrome)\/([\d.]+)/i)
+        const safari = UA.match(/(safari)\/([\d.]+)/i)
+        const firefox = UA.match(/(firefox)\/([\d.]+)/i)
+        const opera = UA.match(/opera (.*)\/(.*\d);/i)
+        const isIE = /msie|trident/i.test(UA)
+        const ieVersion = UA.match(/(?:msie |rv:)(\d+(\.\d+)?)/i)
+
+        if (chrome) {
+            result = 'Chrome ' + chrome[2].replace(/_/g, '.')
+        } else if (safari) {
+            result = 'Safari ' + safari[2].replace(/_/g, '.')
+        } else if (firefox) {
+            result = 'Firefox ' + firefox[2].replace(/_/g, '.')
+        } else if (opera) {
+            result = 'Opera ' + opera[2].replace(/_/g, '.')
+        } else if (isIE) {
+            result = 'Internet Explorer ' + ieVersion[1]
+        }
+
+        return result
     },
 
     system () {
@@ -21,8 +48,9 @@ const SystemInfo = {
         let ipad = ua.match(/(ipad).*\s([\d_]+)/i)
         let iphone = ua.match(/(iphone)\sos\s([\d_]+)/i)
         let android = ua.match(/(android)\s([\d.]+)/i)
-        let chrome = ua.match(/(chrome)\/([\d.]+)/i)
-        let safari = ua.match(/(safari)\/([\d.]+)/i)
+        let chromeos = ua.match(/CrOS/i)
+        let mac = ua.match(/mac (.*) ([\d_]+)/i)
+        let windows = ua.match(/windows (.*) ([\d.]+)/i)
 
         if (android) {
             system = 'Android ' + android[2]
@@ -32,10 +60,12 @@ const SystemInfo = {
             system = 'iPad, iOS ' + ipad[2].replace(/_/g, '.')
         } else if (ipod) {
             system = 'iPod, iOS ' + ipod[2].replace(/_/g, '.')
-        } else if (chrome) {
-            system = 'Chrome ' + chrome[2].replace(/_/g, '.')
-        } else if (safari) {
-            system = 'Safari ' + safari[2].replace(/_/g, '.')
+        } else if (mac) {
+            system = 'Mac ' + mac[1] + ' ' + mac[2].replace(/_/g, '.')
+        } else if (windows) {
+            system = 'Windows ' + windows[1] + ' ' + windows[2].replace(/_/g, '.')
+        } else if (chromeos) {
+            system = 'Chromeos'
         }
 
         return system
