@@ -25,7 +25,18 @@
         </dl> 
         <div class="rd-console-network-item-detail" v-if="show">
             <div class="rd-console-network-item-title">
-                Header
+                Request Header
+            </div>
+            <div class="rd-console-net-detail-row" v-for="(val, key) in data.requestHeader">
+                <div class="rd-console-net-detail-row-col rd-console-net-detail-row-col-key">
+                    {{ key }}:
+                </div>
+                 <div class="rd-console-net-detail-row-col">
+                    {{ val }}
+                </div>
+            </div>
+            <div class="rd-console-network-item-title">
+                Responce Header
             </div>
             <div class="rd-console-net-detail-row" v-for="(val, key) in data.headers">
                 <div class="rd-console-net-detail-row-col rd-console-net-detail-row-col-key">

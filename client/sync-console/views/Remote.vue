@@ -78,7 +78,6 @@ import Log from '../components/LogViewer.vue'
 export default {
     data () {
         return {
-            target: '',
             command: '',
             clientList: this.$syncConsole.clientQueue
         }
@@ -87,12 +86,14 @@ export default {
         Log
     },
     mounted () {
-        this.$syncConsole.scoketClient.loadClients()
+        this.$syncConsole.initClient()
+            .then(() => {
+                this.$syncConsole.scoketClient.loadClients()
+            })
         this.$syncConsole.$on('init-clients', list => { this.clientList = list })
     },
     methods: {
         choose (client) {
-            this.target = client.id
             this.$syncConsole.scoketClient.remoteMode(client.id)
             this.$snack('choosed ' + client.system.system + ' ' + client.id)
         }

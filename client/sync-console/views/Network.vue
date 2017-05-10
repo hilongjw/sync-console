@@ -2,6 +2,7 @@
 .rd-console-network {
     display: flex;
     height: 100%;
+    padding-bottom: 35px;
 }
 .rd-console-network-list {
     width: 100%;
@@ -82,6 +83,7 @@ export default {
         NetworkItem
     },
     mounted () {
+        this.list = this.$syncConsole.netWorkQueue.slice()
         this.$syncConsole.$on('update-net', () => {
             this.list = this.$syncConsole.netWorkQueue.slice()
         })
@@ -89,7 +91,10 @@ export default {
     methods: {
         fire () {
             axios({
-                url: '/'
+                url: '/',
+                headers: {
+                    test: 23333
+                }
             })
             .then(() => {
                 console.info('reported')

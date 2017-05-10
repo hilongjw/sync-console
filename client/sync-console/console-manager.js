@@ -11,16 +11,17 @@ const defaultOptions = {
 
 class SyncConsoleManager {
     constructor (options) {
-        this.options = Object.assign({}, defaultOptions, options)
+        this.query = getParams()
+        this.options = Object.assign({}, defaultOptions, this.query, options)
         this.app = undefined
         this.state = {
             clickCount: 0
         }
-        this.query = getParams()
 
-        this.syncConsole = new SyncConsole(options)
+        this.syncConsole = new SyncConsole(this.options)
 
         if (this.options.el) this.mount(this.options.el)
+
         this.check()
     }
 
@@ -31,13 +32,12 @@ class SyncConsoleManager {
         } catch (e) {
             console.error(e)
         }
-        if (el) {
-            el.addEventListener('click', this.clickMark.bind(this))
-        }
+        if (!el) return
+        el.addEventListener('click', this.clickMark.bind(this))
     }
 
     check () {
-        if (this.query._sync_console_show) {
+        if (this.options._sync_console_show) {
             this.show()
         }
     }

@@ -7,6 +7,8 @@ function formatHeader (header) {
     let headers = {}
     let tmp = []
 
+    if (!header) return headers
+
     header
         .split('\n')
         .map(item => {
@@ -27,6 +29,7 @@ class MockXhr extends Event {
 
     update (req) {
         const net = this.formatRequest(req, {
+            requestHeader: {},
             _requestId: req._requestId,
             startTime: 0,
             costTime: 0,
@@ -56,6 +59,7 @@ class MockXhr extends Event {
             break
         case 4:
             // DONE
+            data.requestHeader = req._SyncHeader
             data.startTime = req._startTime
             data.header = req.getAllResponseHeaders()
             data.headers = formatHeader(data.header)
@@ -70,11 +74,19 @@ class MockXhr extends Event {
 
     mockXMLHttpRequest () {
         if (!window.XMLHttpRequest) return
-        const ignoreReg = /socket.io/
+        // const ignoreReg = /socket.io/
         const noop = () => {}
         let that = this
         const _open = window.XMLHttpRequest.prototype.open
         // const _send = window.XMLHttpRequest.prototype.send
+        const _setRequestHeader = window.XMLHttpRequest.prototype.setRequestHeader
+
+        window.XMLHttpRequest.prototype.setRequestHeader = function (key, val) {
+            if (!this._SyncHeader) this._SyncHeader = {}
+            this._SyncHeader[key] = val
+            window.aa = this
+            return _setRequestHeader.call(this, key, val)
+        }
 
         window.XMLHttpRequest.prototype.open = function (...args) {
             let XMLReq = this
@@ -88,8 +100,8 @@ class MockXhr extends Event {
 
             let _onreadystatechange = XMLReq.onreadystatechange || noop
 
-            if (!ignoreReg.test(url)) {
-                XMLReq.onreadystatechange = function () {
+            if (url) {
+                this.onreadystatechange = function () {
                     that.update(this)
                     return _onreadystatechange.apply(XMLReq, arguments)
                 }

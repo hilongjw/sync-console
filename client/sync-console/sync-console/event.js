@@ -3,10 +3,22 @@ export default class Event {
         this._listeners = {}
     }
 
-    $on (type, cb) {
+    $on (type, cb, ctx) {
+        ctx = ctx || null
         if (!this._listeners[type]) this._listeners[type] = []
-        this._listeners[type].push(cb)
+        this._listeners[type].push({
+            cb: cb,
+            ctx: ctx
+        })
         return this._listeners[type].length - 1
+    }
+
+    $once (type, cb, ctx) {
+        ctx = ctx || null
+        const func = function (...args) {
+            cb.apply(ctx, args)
+            this.$off(type, func)
+        }
     }
 
     $off (type, cb) {
@@ -17,7 +29,7 @@ export default class Event {
         }
         if (typeof cb === 'function') {
             this._listeners[type].map((func, i) => {
-                if (func === cb) {
+                if (func.cb === cb) {
                     this._listeners[type].splice(i, 1)
                     func = null
                 }
@@ -33,8 +45,8 @@ export default class Event {
         const type = args[0]
         args.shift()
         if (this._listeners[type] && this._listeners[type].length) {
-            this._listeners[type].map(cb => {
-                cb.apply(null, args)
+            this._listeners[type].map(item => {
+                item.cb.apply(item.ctx, args)
             })
         }
     }

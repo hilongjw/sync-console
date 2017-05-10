@@ -6,7 +6,6 @@ import SocketClient from './socket-client'
 import SystemInfo from './system'
 import TraceKit from './trace-kit'
 import History from './history'
-import { getParams } from '../utils'
 
 TraceKit.collectWindowErrors = false
 
@@ -14,11 +13,6 @@ class SyncConsole extends Event {
     constructor (options) {
         super()
         this.options = options
-
-        const query = getParams()
-
-        this.token = query._sync_console_token
-        this.show = query._sync_console_show
 
         this.remoteMode = false
         this._history = new History(this.options)
@@ -48,11 +42,16 @@ class SyncConsole extends Event {
         this.initMockError({
             Vue: this.options.Vue
         })
-        this.initClient({
+
+        this.socketOptions = {
             nsp: this.options.server + 'sync-console',
-            token: this.token,
+            token: this.options._sync_console_token,
             project: this.options.project
-        })
+        }
+
+        if (this.options._sync_console_remote) {
+            this.initClient()
+        }
     }
 
     initConsole (options) {
@@ -64,7 +63,7 @@ class SyncConsole extends Event {
         this.historyQueue.push(log)
         this.logQueue.push(log)
         this.$emit('update-log', log)
-        this.scoketClient.$emit('ask-update', {
+        this.scoketClient && this.scoketClient.$emit('ask-update', {
             log: log
         })
     }
@@ -87,7 +86,7 @@ class SyncConsole extends Event {
             this.netWorkQueue.push(net)
         }
         this.$emit('update-net', net)
-        this.scoketClient.$emit('ask-update', {
+        this.scoketClient && this.scoketClient.$emit('ask-update', {
             net: net
         })
     }
@@ -100,60 +99,64 @@ class SyncConsole extends Event {
         })
     }
 
-    initClient (options) {
-        this.scoketClient = new SocketClient(options)
+    initClient () {
+        if (this.scoketClient) return Promise.resolve(this.scoketClient.client)
+        this.scoketClient = new SocketClient(this.socketOptions)
 
-        this.scoketClient.init()
+        return this.scoketClient.init()
+            .then(() => {
+                this.scoketClient.$emit('system', this.system)
 
-        this.scoketClient.$on('system', (cb) => {
-            cb(this.system)
-        })
+                this.scoketClient.$on('ask-data', (cb) => {
+                    cb(null, {
+                        system: this.system,
+                        logQueue: this.logQueue,
+                        historyQueue: this.historyQueue,
+                        netWorkQueue: this.netWorkQueue
+                    })
+                })
 
-        this.scoketClient.$on('ask-data', (cb) => {
-            cb(null, {
-                system: this.system,
-                logQueue: this.logQueue,
-                historyQueue: this.historyQueue,
-                netWorkQueue: this.netWorkQueue
+                this.scoketClient.$on('init', data => {
+                    this.system = data.system || {}
+                    this.logQueue = data.logQueue || []
+                    this.historyQueue = data.historyQueue || []
+                    this.netWorkQueue = data.netWorkQueue || []
+
+                    this.$emit('init-log', this.logQueue)
+                    this.$emit('init-net', this.netWorkQueue)
+                    this.$emit('init-history', this.historyQueue)
+                })
+
+                this.scoketClient.$on('update', data => {
+                    if (data.log) {
+                        this.newLog(data.log)
+                    }
+                    if (data.net) {
+                        this.updateNetWrok(data.net)
+                    }
+                })
+
+                this.scoketClient.$on('run-code', code => {
+                    this.execCommand(code)
+                })
+
+                this.scoketClient.$on('remote-mode', () => {
+                    this.remoteSync = true
+                })
+
+                this.scoketClient.$on('init-clients', () => {
+                    this.clientQueue = this.scoketClient.clientQueue
+                    this.$emit('init-clients', this.clientQueue)
+                })
+
+                this.scoketClient.$on('update-clients', () => {
+                    this.clientQueue = this.scoketClient.clientQueue
+                })
+                return this.scoketClient.client
             })
-        })
-
-        this.scoketClient.$on('init', data => {
-            this.system = data.system || {}
-            this.logQueue = data.logQueue || []
-            this.historyQueue = data.historyQueue || []
-            this.netWorkQueue = data.netWorkQueue || []
-
-            this.$emit('init-log', this.logQueue)
-            this.$emit('init-net', this.netWorkQueue)
-            this.$emit('init-history', this.historyQueue)
-        })
-
-        this.scoketClient.$on('update', data => {
-            if (data.log) {
-                this.newLog(data.log)
-            }
-            if (data.net) {
-                this.updateNetWrok(data.net)
-            }
-        })
-
-        this.scoketClient.$on('run-code', code => {
-            this.execCommand(code)
-        })
-
-        this.scoketClient.$on('remote-mode', () => {
-            this.remoteSync = true
-        })
-
-        this.scoketClient.$on('init-clients', () => {
-            this.clientQueue = this.scoketClient.clientQueue
-            this.$emit('init-clients', this.clientQueue)
-        })
-
-        this.scoketClient.$on('update-clients', () => {
-            this.clientQueue = this.scoketClient.clientQueue
-        })
+            .catch(err => {
+                console.debug(err)
+            })
     }
 
     setRemoteMode () {
@@ -172,7 +175,7 @@ class SyncConsole extends Event {
         console.log(code)
         try {
             // eslint-disable-next-line
-            let result = eval(code)
+            const result = eval(code)
             console.log(result)
         } catch (e) {
             console.error(TraceKit.computeStackTrace(e))

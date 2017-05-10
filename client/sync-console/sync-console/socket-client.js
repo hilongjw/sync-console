@@ -3,8 +3,9 @@ import { getLocationHref } from '../utils'
 
 let io
 class SocketClient extends Event {
-    constructor ({ nsp, token, project }) {
+    constructor (options) {
         super()
+        const { token, nsp, project } = options
         this.token = token
         this.remote = false
         this.client = null
@@ -53,10 +54,23 @@ class SocketClient extends Event {
         })
     }
 
+    clearOldRemoteModeListenner () {
+        this.$off('run-code-remote')
+    }
+
     remoteMode (target) {
         if (!this.client) return
         this.remote = true
         this.target = target
+
+        this.clearOldRemoteModeListenner()
+        this.client.off('admin:sync-update')
+        this.client.off('admin:sync-init')
+
+        if (module.hot) {
+            module.hot.accept()
+            this.clearOldRemoteModeListenner()
+        }
 
         this.$emit('remote-mode')
 
@@ -84,8 +98,10 @@ class SocketClient extends Event {
 
     clientMode () {
         if (!this.client) return
+        this.$off('ask-update')
+        this.$off('system')
 
-        this.$emit('system', (system) => {
+        this.$on('system', (system) => {
             this.client.emit('client:init', {
                 system: system,
                 project: this.project
@@ -98,29 +114,28 @@ class SocketClient extends Event {
 
             this.$emit('ask-data', (err, vm) => {
                 if (err) return
-
                 this.client.emit('client:sync-init', {
                     target: this.target,
                     data: vm
                 })
             })
+        })
 
-            this.$on('ask-update', (vm) => {
-                this.client.emit('client:sync-update', {
-                    target: this.target,
-                    data: vm
-                })
+        this.$on('ask-update', (vm) => {
+            if (!this.target || this.remote) return
+            this.client.emit('client:sync-update', {
+                target: this.target,
+                data: vm
             })
+        })
 
-            this.client.on('client:run-code', (data) => {
-                this.$emit('run-code', data.code)
-            })
+        this.client.on('client:run-code', (data) => {
+            this.$emit('run-code', data.code)
         })
     }
 
     init () {
         if (this.client) return Promise.resolve(this.client)
-        if (io) return Promise.resolve(io.connect(this.nsp))
         return import('socket.io-client')
             .then(_io => {
                 io = _io
