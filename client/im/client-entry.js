@@ -9,7 +9,7 @@ const syncConsoleManager = new window.SyncConsoleManager({
     clickCount: 6, // in 3s
 
     // for sync console
-    project: 'sync test',
+    project: 'sync_test',
     maxLogCount: 50,
     cdn: 'http://sync.bood.in/',
     server: 'http://127.0.0.1:9999/', // 'http://sync.bood.in/',

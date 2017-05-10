@@ -1,5 +1,5 @@
 import Event from './event'
-import { getLocationHref } from '../utils'
+import { getLocationHref, getParams } from '../utils'
 
 let io
 class SocketClient extends Event {
@@ -36,8 +36,11 @@ class SocketClient extends Event {
     }
 
     loadClients () {
+        const query = getParams()
+
         this.client.emit('admin:init-req', {
-            token: this.token
+            token: this.token,
+            project: query._sync_console_project
         })
 
         this.client.on('admin:init-res', (clients) => {
@@ -67,10 +70,10 @@ class SocketClient extends Event {
         this.client.off('admin:sync-update')
         this.client.off('admin:sync-init')
 
-        if (module.hot) {
-            module.hot.accept()
-            this.clearOldRemoteModeListenner()
-        }
+        // if (module.hot) {
+        //     module.hot.accept()
+        //     this.clearOldRemoteModeListenner()
+        // }
 
         this.$emit('remote-mode')
 
@@ -131,6 +134,11 @@ class SocketClient extends Event {
 
         this.client.on('client:run-code', (data) => {
             this.$emit('run-code', data.code)
+        })
+
+        this.client.on('client:error', (data) => {
+            console.error(data.message)
+            this.$emit('error-msg', data.message)
         })
     }
 

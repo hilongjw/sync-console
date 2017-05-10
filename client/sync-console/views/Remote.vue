@@ -51,15 +51,21 @@
             <div class="rd-console-remote-client" v-for="client in clientList" @click="choose(client)" >
                 <div class="rd-console-remote-client-row">
                     <span class="rd-console-remote-client-key">
-                        project: 
+                        Project: 
                     </span>
                     <span>{{ client.project  }}</span>
                 </div>
                 <div class="rd-console-remote-client-row">
                     <span class="rd-console-remote-client-key">
-                        system: 
+                        System: 
                     </span>
                     <span>{{ client.system.system }}</span>
+                </div>
+                 <div class="rd-console-remote-client-row">
+                    <span class="rd-console-remote-client-key">
+                        Browser: 
+                    </span>
+                    <span>{{ client.system.browser }}</span>
                 </div>
                 <div class="rd-console-remote-client-row">
                     <span class="rd-console-remote-client-key">
