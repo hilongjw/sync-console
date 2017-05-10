@@ -51,11 +51,11 @@ export default {
         Log
     },
     mounted () {
-        this.$syncConsole.$on('clear', log => {
+        this.$syncConsole.$on('clear', () => {
             this.logQueue = []
         })
-        this.$syncConsole.$on('update-log', log => {
-            this.logQueue.push(log)
+        this.$syncConsole.$on('update-log', () => {
+            this.logQueue = this.$syncConsole.logQueue
             this.$nextTick(() => {
                 this.listToBottom()
             })

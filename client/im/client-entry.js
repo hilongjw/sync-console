@@ -5,7 +5,6 @@ el.id = 'ddd'
 el.setAttribute('style', 'height: 20px; width: 20px; background: red;')
 document.body.appendChild(el)
 
-// eslint-disable-next-line
 const syncConsoleManager = new window.SyncConsoleManager({
     clickCount: 6, // in 3s
 

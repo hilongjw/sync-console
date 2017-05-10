@@ -36,10 +36,31 @@ class SyncConsoleManager {
         el.addEventListener('click', this.clickMark.bind(this))
     }
 
+    // async load sync console core
+
+    // initSyncConsole () {
+    //     if (this.syncConsole) return Promise.resolve()
+    //     return import('./sync-console')
+    //         .then(module => {
+    //             const SyncConsole = module.default
+    //             this.syncConsole = new SyncConsole(this.options)
+    //             return this.syncConsole
+    //         })
+    // }
+
     check () {
         if (this.options._sync_console_show) {
             this.show()
         }
+
+        // if (this.options._sync_console_show) {
+        //     this.initSyncConsole()
+        //         .then(() => {
+        //             this.show()
+        //         })
+        // } else if (this.options._sync_console_remote) {
+        //     this.initSyncConsole()
+        // }
     }
 
     startReset () {
