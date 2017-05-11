@@ -57,18 +57,16 @@ export function getParams (str, mutli) {
    var params      = {};
    queryString     = queryString.replace(/.*?\?/,"");
 
-   if (queryString.length)
-   {
-      keyValPairs = queryString.split('&');
-      for (let pairNum in keyValPairs)
-      {
-         var key = keyValPairs[pairNum].split('=')[0];
+   if (queryString.length) {
+      keyValPairs = queryString.split('&')
+      for (let i = 0, len = keyValPairs.length; i < len; i++) {
+         var key = keyValPairs[i].split('=')[0];
          if (!key.length) continue;
          if (mutli) {
             if (typeof params[key] === 'undefined') params[key] = [];
-            params[key].push(keyValPairs[pairNum].split('=')[1]);
+            params[key].push(keyValPairs[i].split('=')[1]);
          } else {
-            params[key] = keyValPairs[pairNum].split('=')[1]
+            params[key] = keyValPairs[i].split('=')[1]
          }
       }
    }
