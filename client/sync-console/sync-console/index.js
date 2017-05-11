@@ -69,8 +69,8 @@ class SyncConsole extends Event {
     }
 
     initNetWork () {
-        this.netWork = new MockNetwork()
-        this.netWork.$on('update', this.updateNetWrok.bind(this))
+        this.mockNetWork = new MockNetwork()
+        this.mockNetWork.$on('update', this.updateNetWrok, this)
     }
 
     updateNetWrok (net) {

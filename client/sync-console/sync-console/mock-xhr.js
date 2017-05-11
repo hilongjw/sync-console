@@ -84,7 +84,6 @@ class MockXhr extends Event {
         window.XMLHttpRequest.prototype.setRequestHeader = function (key, val) {
             if (!this._SyncHeader) this._SyncHeader = {}
             this._SyncHeader[key] = val
-            window.aa = this
             return _setRequestHeader.call(this, key, val)
         }
 

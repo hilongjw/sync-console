@@ -118,7 +118,22 @@ const SystemInfo = {
         }
 
         setTimeout(() => {
+            let m = performance.memory
             let t = performance.timing
+
+            const mbSize = Math.pow(1024, 2)
+
+            if (m && m.usedJSHeapSize) {
+                data['usedJSHeapSize'] = Math.floor(m.usedJSHeapSize / mbSize) + ' MB'
+            }
+
+            if (m && m.totalJSHeapSize) {
+                data['totalJSHeapSize'] = Math.floor(m.totalJSHeapSize / mbSize) + ' MB'
+            }
+
+            if (m && m.jsHeapSizeLimit) {
+                data['jsHeapSizeLimit'] = Math.floor(m.jsHeapSizeLimit / mbSize) + ' MB'
+            }
 
             if (t.navigationStart) {
                 data['navigationStart'] = t.navigationStart
