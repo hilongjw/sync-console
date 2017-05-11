@@ -21,6 +21,13 @@ syncConsoleManager.mount('#ddd')
  // eslint-disable-next-line
 const app = new Vue({
     el: '#app',
+    data () {
+        return {
+            testData: {
+                a: 6666
+            }
+        }
+    },
     render (h) {
         return <div>1</div>
     },
