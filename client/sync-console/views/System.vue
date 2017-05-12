@@ -72,7 +72,7 @@
 
                     <div 
                         class="rd-console-app-table-row" 
-                        @click="copy(row.val)"
+                        @click="copy(systemMemory)"
                     >
                         <div class="rd-console-app-table-key">
                             memory
@@ -96,7 +96,7 @@ import { getObjAllKeys } from '../utils'
 export default {
     data () {
         return {
-            systemMemory: this.$syncConsole.systemMemory,
+            systemMemory: this.$syncConsole.systemInfo.systemMemory,
             list: []
         }
     },

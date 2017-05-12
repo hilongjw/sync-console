@@ -31,13 +31,6 @@ class SyncConsole extends Event {
         this.systemInfo = new SystemInfo()
         this.system = this.systemInfo.data
 
-        this.systemMemory = []
-
-        // SystemInfo.info((err, data) => {
-        //     if (err) console.error(err)
-        //     this.system = data
-        // })
-
         this.initConsole({
             methods: this.options.consoleMethods
         })
