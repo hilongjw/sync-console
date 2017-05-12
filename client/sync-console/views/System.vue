@@ -66,7 +66,19 @@
                             {{ row.key }}
                         </div>
                         <div class="rd-console-app-table-val">
-                            {{ row.val }}
+                            <span>{{ row.val }}</span>
+                        </div>
+                    </div>
+
+                    <div 
+                        class="rd-console-app-table-row" 
+                        @click="copy(row.val)"
+                    >
+                        <div class="rd-console-app-table-key">
+                            memory
+                        </div>
+                        <div class="rd-console-app-table-val">
+                            <LineChart :data="systemMemory"></LineChart>
                         </div>
                     </div>
                     
@@ -77,14 +89,19 @@
 </template>
 
 <script>
+import LineChart from '../components/LineChart.vue'
 import clipboard from 'clipboard-js'
 import { getObjAllKeys } from '../utils'
 
 export default {
     data () {
         return {
+            systemMemory: this.$syncConsole.systemMemory,
             list: []
         }
+    },
+    components: {
+        LineChart
     },
     mounted () {
         this.init(this.$syncConsole.system)

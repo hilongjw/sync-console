@@ -31,7 +31,7 @@
 .rd-console-remote-client {
     line-height: 30px;
     padding: 5px 10px;
-    box-shadow: 1px 1px 2px rgba(10, 10, 10, 0.4);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.17);
     margin-bottom: 5px;
     background: #fff;
     word-break: break-all;

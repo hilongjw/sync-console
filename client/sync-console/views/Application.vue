@@ -36,7 +36,7 @@
 }
 .rd-console-app-table-val,
 .rd-console-app-table-hd-val {
-    flex: 1;
+    flex: 2;
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;

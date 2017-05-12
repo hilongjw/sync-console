@@ -29,8 +29,6 @@ class MockConsole extends Event {
                     args: JSON.parse(stringify(args, stringifyVue))
                 }
 
-                // console.debug(JSON.parse(stringify(args, stringifyVue)))
-
                 vm.$emit('new', log)
 
                 old.apply(console, args)
