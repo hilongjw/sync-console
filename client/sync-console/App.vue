@@ -8,7 +8,7 @@
     box-shadow: 1px -11px 16px 0px rgba(0, 0, 0, 0.05);
 }
 .rd-console-header {
-    /*background: #673AB7;*/
+    background: #fff;
     font-size: 13px;
     color: #fff;
     padding-right: 30px;
