@@ -32,8 +32,7 @@ const app = new Vue({
         return <div>1</div>
     },
     mounted () {
-        console.log('app mounted', window.vue = this)
-        // this.show()
+        console.log('app mounted')
     },
     methods: {
         show () {

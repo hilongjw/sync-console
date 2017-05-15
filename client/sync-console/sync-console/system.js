@@ -145,14 +145,14 @@ class SystemInfo extends Event {
         const memory = performance.memory
         if (!memory) return
 
-        const jsHeapSizeLimit = memory.jsHeapSizeLimit
+        // const jsHeapSizeLimit = memory.jsHeapSizeLimit
         const usedJSHeapSize = memory.usedJSHeapSize
 
         const MBSize = Math.pow(1024, 2)
 
         return {
             size: Math.floor(usedJSHeapSize / MBSize),
-            percent: (usedJSHeapSize / jsHeapSizeLimit).toFixed(2)
+            percent: 100 * Math.random() // (usedJSHeapSize / jsHeapSizeLimit).toFixed(2)
         }
     }
 

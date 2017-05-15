@@ -39,7 +39,7 @@ export default {
     computed: {
         points () {
             return this.data.map((item, i) => {
-                return i * 20 + ',' + item.size
+                return i * 20 + ',' + item.percent
             }).join(' ')
         }
     },
@@ -49,6 +49,24 @@ export default {
             this.viewBox = '0 0 ' + width + ' 50'
             this.transform = 'translate(-' + 2 * width + ' 0)'
         })
+        // test memory leak
+
+        // let i = 10000
+        // let a = []
+
+        // while (i) {
+        //     i--
+        //     a.push(JSON.stringify(this.data))
+        // }
+
+        // let ar = []
+        // setInterval(() => {
+        //     console.log('once ', console.memory.usedJSHeapSize)
+        //     let b = {
+        //         aa: JSON.stringify(a)
+        //     }
+        //     ar.push(b)
+        // }, 10)
     }
 }
 </script>

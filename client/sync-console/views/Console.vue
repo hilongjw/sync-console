@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 .rd-console-console {
     position: relative;
     box-sizing: border-box;
@@ -21,13 +21,44 @@
     box-sizing: border-box;
     border: 1px solid #e2e2e2;
 }
+.rd-console-view-type {
+    display: flex;
+    width: 100%;
+    background: #fff;
+    line-height: 30px;
+}
+.rd-console-view-type-item {
+    padding: 0 20px;
+    border-bottom: 1px solid #fff;
+}
+.rd-console-view-type-item.active {
+    padding: 0 20px;
+    color: #3F51B5;
+    border-bottom: 1px solid #673AB7;
+}
 </style>
 
 <template>
     <div class="rd-console-view rd-console-console">
-        <Log :key="log.id" :log="log" v-for="log in logQueue"></Log>
+        <div class="rd-console-view-type">
+            <div 
+                class="rd-console-view-type-item" 
+                :class="{ 'active': type.active }"
+                v-for="type in typeList"
+                @click="chooseType(type)"
+            >
+                {{ type.text }}
+            </div>
+        </div>
+        <Log :key="log.id" :log="log" v-for="log in logs"></Log>
         <div class="rd-console-execcode">
-            <textarea @keyup.enter="fire" placeholder="run code here..." class="rd-console-exec-text" v-model="command" rows="1"></textarea>
+            <textarea 
+                @keyup.enter="fire" 
+                placeholder="run code here..." 
+                class="rd-console-exec-text" 
+                v-model="command"
+                rows="1"
+            ></textarea>
             <div class="rd-console-execcode-action-right">
                 <button class="rd-console-btn highlight"  @click="fire">OK</button>
                 <button class="rd-console-btn"  @click="clear">Clear</button>
@@ -43,8 +74,38 @@ export default {
     data () {
         return {
             $list: null,
+            type: '',
+            typeList: [{
+                text: 'all',
+                key: '',
+                active: true
+            }, {
+                text: 'log',
+                key: 'log',
+                active: false
+            }, {
+                text: 'info',
+                key: 'info',
+                active: false
+            }, {
+                text: 'warn',
+                key: 'warn',
+                active: false
+            }, {
+                text: 'error',
+                key: 'error',
+                active: false
+            }],
             command: '',
             logQueue: this.$syncConsole.logQueue.slice()
+        }
+    },
+    computed: {
+        logs () {
+            if (!this.type) return this.logQueue
+            return this.logQueue.filter(log => {
+                return log.type === this.type
+            })
         }
     },
     components: {
@@ -74,6 +135,11 @@ export default {
         listToBottom () {
             if (!this.$list) return
             this.$list.scrollTop = this.$list.scrollHeight
+        },
+        chooseType (type) {
+            this.typeList.map(item => (item.active = false))
+            this.type = type.key
+            type.active = true
         },
         fire () {
             this.$syncConsole.execCommand(this.command)

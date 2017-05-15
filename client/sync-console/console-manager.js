@@ -1,5 +1,5 @@
 import { getParams } from './utils'
-import SyncConsole from './sync-console'
+// import SyncConsole from './sync-console'
 
 const defaultOptions = {
     maxLogCount: 50,
@@ -18,7 +18,7 @@ class SyncConsoleManager {
             clickCount: 0
         }
 
-        this.syncConsole = new SyncConsole(this.options)
+        // this.syncConsole = new SyncConsole(this.options)
 
         if (this.options.el) this.mount(this.options.el)
 
@@ -38,19 +38,21 @@ class SyncConsoleManager {
 
     // async load sync console core
 
-    // initSyncConsole () {
-    //     if (this.syncConsole) return Promise.resolve()
-    //     return import('./sync-console')
-    //         .then(module => {
-    //             const SyncConsole = module.default
-    //             this.syncConsole = new SyncConsole(this.options)
-    //             return this.syncConsole
-    //         })
-    // }
+    initSyncConsole () {
+        if (this.syncConsole) return Promise.resolve()
+        return import('./sync-console')
+            .then(module => {
+                const SyncConsole = module.default
+                this.syncConsole = new SyncConsole(this.options)
+                return this.syncConsole
+            })
+    }
 
     check () {
         if (this.options._sync_console_show) {
             this.show()
+        } else if (this.options._sync_console_remote) {
+            this.initSyncConsole()
         }
 
         // if (this.options._sync_console_show) {
@@ -84,9 +86,14 @@ class SyncConsoleManager {
 
     loadApp () {
         if (this.app) return Promise.resolve(this.app)
+        let app
         return import('./app')
             .then(module => {
-                this.app = module.install(this.syncConsole)
+                app = module
+                return this.initSyncConsole()
+            })
+            .then(() => {
+                this.app = app.install(this.syncConsole)
                 return this.app
             })
     }
