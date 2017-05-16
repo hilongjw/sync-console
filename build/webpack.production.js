@@ -20,7 +20,7 @@ const productionConf = merge(baseConfig, {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"',
-                __SYNC_CONSOLE_PATH_: '"http://sync.bood.in/"'
+                __SYNC_CONSOLE_PATH_: '"https://sync-console-fe.luojilab.com/"'
             }
         }),
         new webpack.optimize.UglifyJsPlugin({

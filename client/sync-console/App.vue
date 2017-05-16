@@ -6,6 +6,7 @@
     height: 40%;
     width: 100%;
     box-shadow: 1px -11px 16px 0px rgba(0, 0, 0, 0.05);
+    z-index: 100000;
 }
 .rd-console-header {
     background: #fff;
