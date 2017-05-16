@@ -14,7 +14,7 @@
     box-sizing: border-box;
     text-align: center;
     transform: translateX(-50%);
-    z-index: 100000;
+    z-index: 100001;
 }
 .snack-slide-enter-active {
   transition: all .3s ease;

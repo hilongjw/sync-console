@@ -30,10 +30,14 @@ class SyncConsole extends Event {
 
         this.systemInfo = new SystemInfo()
         this.system = this.systemInfo.data
+        this.systemInfo.$on('update', () => {
+            this.system = this.systemInfo.data
+        })
 
         this.initConsole({
             methods: this.options.consoleMethods
         })
+
         this.initNetWork()
         this.initMockError({
             Vue: this.options.Vue
@@ -42,7 +46,8 @@ class SyncConsole extends Event {
         this.socketOptions = {
             nsp: this.options.server + 'sync-console',
             token: this.options._sync_console_token,
-            project: this.options.project
+            project: this.options.project,
+            system: this.system
         }
 
         if (this.options._sync_console_remote) {

@@ -5,7 +5,7 @@ let io
 class SocketClient extends Event {
     constructor (options) {
         super()
-        const { token, nsp, project } = options
+        const { token, nsp, project, system } = options
         this.token = token
         this.remote = false
         this.client = null
@@ -13,6 +13,7 @@ class SocketClient extends Event {
         this.project = project || getLocationHref()
         this.target = ''
         this.clientQueue = []
+        this.system = system
     }
 
     addClient (client) {
@@ -104,11 +105,9 @@ class SocketClient extends Event {
         this.$off('ask-update')
         this.$off('system')
 
-        this.$on('system', (system) => {
-            this.client.emit('client:init', {
-                system: system,
-                project: this.project
-            })
+        this.client.emit('client:init', {
+            system: this.system,
+            project: this.project
         })
 
         this.client.on('client:sync-req', (data) => {
@@ -116,7 +115,7 @@ class SocketClient extends Event {
             this.target = data.target
 
             this.$emit('ask-data', (err, vm) => {
-                if (err) return
+                if (err) return console.error(err)
                 this.client.emit('client:sync-init', {
                     target: this.target,
                     data: vm
@@ -138,7 +137,12 @@ class SocketClient extends Event {
 
         this.client.on('client:error', (data) => {
             console.error(data.message)
-            this.$emit('error-msg', data.message)
+            this.$emit('msg', data.message)
+        })
+
+        this.client.on('client:success', (data) => {
+            console.log(data.message)
+            this.$emit('msg', data.message)
         })
     }
 

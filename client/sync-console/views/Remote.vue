@@ -95,6 +95,9 @@ export default {
         this.$syncConsole.initClient()
             .then(() => {
                 this.$syncConsole.scoketClient.loadClients()
+                this.$syncConsole.scoketClient.$on('msg', msg => {
+                    this.$snack(msg)
+                })
             })
         this.$syncConsole.$on('init-clients', list => { this.clientList = list })
     },
