@@ -42,6 +42,13 @@
 }
 
 /* global */
+.rd-console-execcode {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 35px;
+    width: 100%;
+}
 .rd-console .hover-black:hover {
     background: #f1f1f1;
     cursor: pointer;

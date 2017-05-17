@@ -109,18 +109,21 @@ class SocketClient extends Event {
             system: this.system,
             project: this.project
         })
+        console.log('start client mode')
 
         this.client.on('client:sync-req', (data) => {
             // TODO auth check
             this.target = data.target
 
-            this.$emit('ask-data', (err, vm) => {
-                if (err) return console.error(err)
-                this.client.emit('client:sync-init', {
-                    target: this.target,
-                    data: vm
-                })
-            })
+            console.log('client:sync-req')
+
+            // this.$emit('ask-data', (err, vm) => {
+            //     if (err) return console.error(err)
+            //     this.client.emit('client:sync-init', {
+            //         target: this.target,
+            //         data: vm
+            //     })
+            // })
         })
 
         this.$on('ask-update', (vm) => {
@@ -151,7 +154,9 @@ class SocketClient extends Event {
         return import('socket.io-client')
             .then(_io => {
                 io = _io
-                this.client = io.connect(this.nsp)
+                this.client = io.connect(this.nsp, {
+                    transports: ['polling']
+                })
                 this.clientMode()
                 return this.client
             })

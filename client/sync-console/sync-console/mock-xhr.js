@@ -21,9 +21,28 @@ function formatHeader (header) {
     return headers
 }
 
+const ignoreSocketPolling = /socket.io/
+
+function urlCheck (url, ignores) {
+    let result = false
+    for (let i = 0, len = ignores.length; i < len; i++) {
+        if (ignores[i].test(url)) {
+            result = true
+            break
+        }
+    }
+    return result
+}
+
 class MockXhr extends Event {
-    constructor () {
+    constructor ({ ignores } = {}) {
         super()
+
+        this.options = {
+            ignores: [ignoreSocketPolling]
+        }
+        ignores = ignores || []
+        this.options.ignores = this.options.ignores.concat(ignores)
         this.mockXMLHttpRequest()
     }
 
@@ -74,7 +93,7 @@ class MockXhr extends Event {
 
     mockXMLHttpRequest () {
         if (!window.XMLHttpRequest) return
-        // const ignoreReg = /socket.io/
+
         const noop = () => {}
         let that = this
         const _open = window.XMLHttpRequest.prototype.open
@@ -90,6 +109,10 @@ class MockXhr extends Event {
         window.XMLHttpRequest.prototype.open = function (...args) {
             let XMLReq = this
             let url = args[1]
+
+            const isIgnore = urlCheck(url, that.options.ignores)
+
+            if (isIgnore) return _open.apply(XMLReq, args)
 
             const _onprogress = this.onprogress || noop
             const _onload = this.onload || noop

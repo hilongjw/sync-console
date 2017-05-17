@@ -38,7 +38,10 @@ class SyncConsole extends Event {
             methods: this.options.consoleMethods
         })
 
-        this.initNetWork()
+        this.initNetWork({
+            ignores: this.options.netIgnores // [ <regexp> ]
+        })
+
         this.initMockError({
             Vue: this.options.Vue
         })
@@ -106,8 +109,6 @@ class SyncConsole extends Event {
 
         return this.scoketClient.init()
             .then(() => {
-                this.scoketClient.$emit('system', this.system)
-
                 this.scoketClient.$on('ask-data', (cb) => {
                     cb(null, {
                         system: this.system,
@@ -153,6 +154,7 @@ class SyncConsole extends Event {
                 this.scoketClient.$on('update-clients', () => {
                     this.clientQueue = this.scoketClient.clientQueue
                 })
+
                 return this.scoketClient.client
             })
             .catch(err => {
