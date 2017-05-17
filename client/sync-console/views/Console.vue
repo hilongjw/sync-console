@@ -4,13 +4,6 @@
     box-sizing: border-box;
     padding-bottom: 35px;
 }
-.rd-console-execcode {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    height: 35px;
-    width: 100%;
-}
 .rd-console-exec-text {
     width: 100%;
     height: 35px;

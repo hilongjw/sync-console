@@ -1,5 +1,5 @@
 /*!
- * SyncConsole.js v0.0.7
+ * SyncConsole.js v0.0.8
  * (c) 2017 Awe <hilongjw@gmail.com>
  * Released under the MIT License.
  * 

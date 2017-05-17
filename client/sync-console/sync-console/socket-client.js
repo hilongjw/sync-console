@@ -155,7 +155,7 @@ class SocketClient extends Event {
             .then(_io => {
                 io = _io
                 this.client = io.connect(this.nsp, {
-                    transports: ['polling']
+                    // transports: ['polling'] // for unsupport wss test
                 })
                 this.clientMode()
                 return this.client
