@@ -1,11 +1,10 @@
 import { getParams } from './utils'
-// import SyncConsole from './sync-console'
 
 const defaultOptions = {
     maxLogCount: 50,
     duration: 3 * 1000,
-    clickCount: 10,
-    server: '/',
+    clickCount: 5,
+    server: process.env.__SYNC_CONSOLE_API_ || location.host,
     Vue: null
 }
 
@@ -18,8 +17,6 @@ class SyncConsoleManager {
             clickCount: 0
         }
 
-        // this.syncConsole = new SyncConsole(this.options)
-
         if (this.options.el) this.mount(this.options.el)
 
         this.check()
@@ -28,16 +25,15 @@ class SyncConsoleManager {
     mount (selector) {
         let el
         try {
-            el = window.document.body.querySelector(selector)
+            el = window.document.querySelector(selector)
         } catch (e) {
             console.error(e)
         }
-        if (!el) return
+        if (!el) return console.error('error at mount: invalid selector %s', selector)
         el.addEventListener('click', this.clickMark.bind(this))
     }
 
     // async load sync console core
-
     initSyncConsole () {
         if (this.syncConsole) return Promise.resolve()
         return import('./sync-console')
@@ -54,15 +50,6 @@ class SyncConsoleManager {
         } else if (this.options._sync_console_remote) {
             this.initSyncConsole()
         }
-
-        // if (this.options._sync_console_show) {
-        //     this.initSyncConsole()
-        //         .then(() => {
-        //             this.show()
-        //         })
-        // } else if (this.options._sync_console_remote) {
-        //     this.initSyncConsole()
-        // }
     }
 
     startReset () {

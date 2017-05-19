@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import Console from '../views/Console.vue'
 import History from '../views/History.vue'
 import Application from '../views/Application.vue'
-import Report from '../views/Report.vue'
 import SystemView from '../views/System.vue'
 import Remote from '../views/Remote.vue'
 import Network from '../views/Network.vue'
@@ -24,10 +23,6 @@ const routes = [
         path: '/application',
         name: 'application',
         component: Application
-    }, {
-        path: '/report',
-        name: 'report',
-        component: Report
     }, {
         path: '/system',
         name: 'system',

@@ -24,6 +24,8 @@
     border: 1px solid #e2e2e2;
 }
 .rd-console-remote-client-list {
+    display: flex;
+    flex-wrap: wrap;
     background: #fff;
     padding: 10px;
     border-radius: 4px;
@@ -32,10 +34,12 @@
     line-height: 30px;
     padding: 5px 10px;
     box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.17);
-    margin-bottom: 5px;
     background: #fff;
     word-break: break-all;
     cursor: pointer;
+    width: 32.3333%;
+    margin: 5px 0.5%;
+    box-sizing: border-box;
 }
 .rd-console-remote-client:hover {
     background: #f7f7f7;
@@ -43,12 +47,29 @@
 .rd-console-remote-client-key {
     color: #696969;
 }
+.rd-console-remote-client-active {
+    background: #c0f8ff;
+}
+.rd-console-remote-client-active:hover {
+    background: #c0f8ff;
+}
+@media (max-width: 750px) {
+    .rd-console-remote-client {
+        margin-bottom: 5px;
+        width: 100%;
+    }
+}
 </style>
 
 <template>
     <div class="rd-console-view rd-console-console">
         <div class="rd-console-remote-client-list">
-            <div class="rd-console-remote-client" v-for="client in clientList" @click="choose(client)" >
+            <div 
+                class="rd-console-remote-client" 
+                :class="{ 'rd-console-remote-client-active': client.active }"
+                v-for="client in clientList"
+                @click="choose(client)"
+            >
                 <div class="rd-console-remote-client-row">
                     <span class="rd-console-remote-client-key">
                         Project: 
@@ -85,7 +106,7 @@ export default {
     data () {
         return {
             command: '',
-            clientList: this.$syncConsole.clientQueue
+            clientList: [] // this.$syncConsole.clientQueue
         }
     },
     components: {
@@ -99,10 +120,18 @@ export default {
                     this.$snack(msg)
                 })
             })
-        this.$syncConsole.$on('init-clients', list => { this.clientList = list })
+
+        this.$syncConsole.$on('init-clients', list => {
+            this.clientList = list.map(client => {
+                client.active = false
+                return client
+            })
+        })
     },
     methods: {
         choose (client) {
+            this.clientList.map(client => (client.active = false))
+            client.active = true
             this.$syncConsole.scoketClient.remoteMode(client.id)
             this.$snack('choosed ' + client.system.system + ' ' + client.id)
         }

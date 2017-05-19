@@ -11,7 +11,8 @@ const developmentConf = merge(baseConfig, {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"',
-                __SYNC_CONSOLE_PATH_: '"http://127.0.0.1:8666/"'
+                __SYNC_CONSOLE_PATH_: '"http://127.0.0.1:8666/"',
+                __SYNC_CONSOLE_API_: '"http://127.0.0.1:9999/"'
             }
         }),
         new webpack.LoaderOptionsPlugin({

@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div 
+                    <!-- <div 
                         class="rd-console-app-table-row" 
                         @click="copy(systemMemory)"
                     >
@@ -80,7 +80,7 @@
                         <div class="rd-console-app-table-val">
                             <LineChart :data="systemMemory"></LineChart>
                         </div>
-                    </div>
+                    </div> -->
                     
                 </div>
             </div>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import LineChart from '../components/LineChart.vue'
+// import LineChart from '../components/LineChart.vue'
 import clipboard from 'clipboard-js'
 import { getObjAllKeys } from '../utils'
 
@@ -101,7 +101,7 @@ export default {
         }
     },
     components: {
-        LineChart
+        // LineChart
     },
     mounted () {
         this.init(this.$syncConsole.system)
