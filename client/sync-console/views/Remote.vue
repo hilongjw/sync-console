@@ -128,6 +128,9 @@ export default {
             })
         })
     },
+    beforeDestory () {
+        this.$syncConsole.$off('init-clients')
+    },
     methods: {
         choose (client) {
             this.clientList.map(client => (client.active = false))

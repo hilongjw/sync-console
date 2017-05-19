@@ -153,6 +153,7 @@ class SyncConsole extends Event {
 
                 this.scoketClient.$on('update-clients', () => {
                     this.clientQueue = this.scoketClient.clientQueue
+                    this.$emit('init-clients', this.clientQueue)
                 })
 
                 return this.scoketClient.client
