@@ -105,6 +105,9 @@ const JSONViewer = {
     },
     render (h) {
         let dataType = getType(this.data)
+
+        console.debug('66666', dataType)
+
         let childNodes
 
         if (dataType === 'array') {

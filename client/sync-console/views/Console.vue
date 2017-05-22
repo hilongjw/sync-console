@@ -72,22 +72,6 @@ export default {
                 text: 'all',
                 key: '',
                 active: true
-            }, {
-                text: 'log',
-                key: 'log',
-                active: false
-            }, {
-                text: 'info',
-                key: 'info',
-                active: false
-            }, {
-                text: 'warn',
-                key: 'warn',
-                active: false
-            }, {
-                text: 'error',
-                key: 'error',
-                active: false
             }],
             command: '',
             logQueue: this.$syncConsole.logQueue.slice()
@@ -103,6 +87,15 @@ export default {
     },
     components: {
         Log
+    },
+    created () {
+        this.$syncConsole.mockConsole.options.methods.map(method => {
+            this.typeList.push({
+                text: method,
+                key: method,
+                active: false
+            })
+        })
     },
     mounted () {
         this.$syncConsole.$on('clear', () => {

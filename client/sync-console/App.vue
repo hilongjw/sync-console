@@ -131,6 +131,10 @@ export default {
                 show: true
             },
             tabs: [{
+                text: 'Element',
+                router: { name: 'element' },
+                active: false
+            }, {
                 text: 'Console',
                 router: { name: 'console' },
                 active: true
