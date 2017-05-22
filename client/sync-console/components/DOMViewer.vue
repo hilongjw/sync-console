@@ -42,7 +42,6 @@ function renderAttrs (h, node) {
 
 function renderTag (h, node, fold) {
     if (typeof node === 'string') return node
-    console.log(h('comment', {}, '6666'))
     if (node.type && node.type === 'comment') return <span class="rd-console-dom-v-comment">{`<!-- ${node.children} -->`}</span>
 
     const startTag = <span class="rd-console-dom-v-tag-name">
