@@ -12,7 +12,7 @@
     color: #03A9F4;
 }
 .rd-console-dom-v-attr-gray {
-    color: #03A9F4;
+    color: #a3a4a5;
 }
 .rd-console-dom-v-comment {
     color: #5b8827;
@@ -33,9 +33,9 @@ function renderAttrs (h, node) {
     return node.attrs.map(item => {
         return <span>
         {' '}<span class="rd-console-dom-v-attr-key">{item.key}</span>
-        {'="'}
+        <span class="rd-console-dom-v-attr-gray">{'="'}</span>
         <span class="rd-console-dom-v-attr-val">{ item.val }</span>
-        {'"'}
+        <span class="rd-console-dom-v-attr-gray">{'"'}</span>
         </span>
     })
 }
