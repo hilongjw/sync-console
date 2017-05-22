@@ -61,6 +61,10 @@ function renderTag (h, node, fold) {
                 })
             })
         }
+    } else {
+        if (node.children && node.children.length) {
+            children = '...'
+        }
     }
 
     return <div class="rd-console-dom-view-block">
