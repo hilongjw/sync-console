@@ -19,14 +19,6 @@
 }
 </style>
 
-<!-- <template>
-    <div class="rd-console-dom-view">
-        <div class="rd-console-dom-view-block">
-            
-        </div>
-    </div>
-</template> -->
-
 <script>
 function renderAttrs (h, node) {
     if (!node || !node.attrs || !node.attrs.length) return ''
