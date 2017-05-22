@@ -1,6 +1,6 @@
 <style>
 .rd-console-dom-view-block {
-    margin-left: 10px;
+    padding-left: 10px;
 }
 .rd-console-dom-v-tag-name {
     color: #9C27B0;
@@ -13,6 +13,9 @@
 }
 .rd-console-dom-v-attr-gray {
     color: #03A9F4;
+}
+.rd-console-dom-v-comment {
+    color: #5b8827;
 }
 </style>
 
@@ -39,7 +42,8 @@ function renderAttrs (h, node) {
 
 function renderTag (h, node, fold) {
     if (typeof node === 'string') return node
-    if (node.type && node.type === 'comment') return
+    console.log(h('comment', {}, '6666'))
+    if (node.type && node.type === 'comment') return <span class="rd-console-dom-v-comment">{`<!-- ${node.children} -->`}</span>
 
     const startTag = <span class="rd-console-dom-v-tag-name">
         { '<' + node.tag }{renderAttrs(h, node)}{ '>' }
@@ -67,9 +71,7 @@ function renderTag (h, node, fold) {
         }
     }
 
-    return <div class="rd-console-dom-view-block">
-        { startTag }{ children }{ endTag }
-    </div>
+    return [startTag, children, endTag]
 }
 
 const DOMViewer = {
