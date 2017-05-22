@@ -147,6 +147,10 @@ export default {
                 router: { name: 'network' },
                 active: false
             }, {
+                text: 'Resource',
+                router: { name: 'resource' },
+                active: false
+            }, {
                 text: 'Application',
                 router: { name: 'application' },
                 active: false
