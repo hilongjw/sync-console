@@ -1,4 +1,5 @@
-import { camelize } from '../utils'
+import { camelize, getType } from '../utils'
+import { parseNode, isDOM } from '../lib/dom-parse'
 
 function basename (filename) {
     return filename.replace(/\/.*\//, '')
@@ -9,9 +10,7 @@ const propModes = ['default', 'sync', 'once']
 
 function getInstanceName (instance) {
     const name = instance.$options.name || instance.$options._componentTag
-    if (name) {
-        return name
-    }
+    if (name) return name
     const file = instance.$options.__file // injected by vue-loader
     if (file) {
         return basename(file)
@@ -233,8 +232,9 @@ function getInstanceDetails (instance) {
         }
         return {
             id: instance._uid,
-            _isVue: true,
+            _is_SYNC_CONSOLE_Vue: true,
             name: getInstanceName(instance),
+            $el: instance.$el,
             state: processProps(instance).concat(
                 processState(instance),
                 processComputed(instance),
@@ -247,6 +247,8 @@ function getInstanceDetails (instance) {
 }
 
 export default function stringifyVue (key, val) {
+    const type = getType(val)
+    if (isDOM.test(type)) return parseNode(val)
     if (!val || !val._isVue) return val
     return getInstanceDetails(val)
 }

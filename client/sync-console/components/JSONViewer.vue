@@ -52,6 +52,7 @@
 </style>
 
 <script>
+import DOMViewer from './DOMViewer.vue'
 import { getType } from '../utils/'
 
 function simpleRender (h, val, cls, key) {
@@ -106,7 +107,13 @@ const JSONViewer = {
     render (h) {
         let dataType = getType(this.data)
 
-        console.debug('66666', dataType)
+        if (this.data && this.data.is_SCONSOLE_DOM) {
+            return h(DOMViewer, {
+                props: {
+                    data: this.data
+                }
+            })
+        }
 
         let childNodes
 

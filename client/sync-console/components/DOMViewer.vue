@@ -20,6 +20,9 @@
 </style>
 
 <script>
+import { parseNode, isDOM } from '../lib/dom-parse'
+import { getType } from '../utils'
+
 function renderAttrs (h, node) {
     if (!node || !node.attrs || !node.attrs.length) return ''
     return node.attrs.map(item => {
@@ -34,6 +37,7 @@ function renderAttrs (h, node) {
 
 function renderTag (h, node, fold) {
     if (typeof node === 'string') return node
+    if (!node) return
     if (node.type && node.type === 'comment') return <span class="rd-console-dom-v-comment">{`<!-- ${node.children} -->`}</span>
 
     const startTag = <span class="rd-console-dom-v-tag-name">
@@ -73,9 +77,16 @@ const DOMViewer = {
         }
     },
     render (h) {
+        let data = this.data
+        const type = getType(data)
+
+        if (isDOM.test(type)) {
+            data = parseNode(this.data)
+        }
+
         return <div class="rd-console-dom-view" onClick={ this.toggle }>
             <div class="rd-console-dom-view-block">
-                { renderTag(h, this.data, this.fold) }
+                { renderTag(h, data, this.fold) }
             </div>
         </div>
     },
