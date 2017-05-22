@@ -73,9 +73,6 @@ export default {
             return (time / 1000).toFixed(2) + ' ms'
         }
     },
-    mounted () {
-        window.bb = this
-    },
     methods: {
         toggle () {
             this.show = !this.show
