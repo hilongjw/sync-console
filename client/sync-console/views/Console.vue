@@ -132,7 +132,6 @@ export default {
             this.command = ''
         },
         clear () {
-            window.aa = this
             this.logQueue = []
         }
     }

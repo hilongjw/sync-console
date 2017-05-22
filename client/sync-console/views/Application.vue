@@ -84,6 +84,17 @@
 <script>
 import clipboard from 'clipboard-js'
 
+function cookieParse (str) {
+    let tmp = []
+    return document.cookie.split(';').map(item => {
+        tmp = item.split('=')
+        return {
+            key: tmp[0],
+            val: tmp[1]
+        }
+    })
+}
+
 export default {
     data () {
         return {
@@ -114,10 +125,7 @@ export default {
             })
         },
         initCookie () {
-            this.list = [{
-                key: 'cookie',
-                value: window.document.cookie
-            }]
+            this.list = cookieParse(window.document.cookie)
         },
         copy (val) {
             const str = JSON.stringify(val)

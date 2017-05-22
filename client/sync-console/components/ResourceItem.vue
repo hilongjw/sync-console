@@ -51,6 +51,7 @@
 </template>
 
 <script>
+const empty = ''
 export default {
     props: {
         data: Object
@@ -62,6 +63,7 @@ export default {
     },
     filters: {
         size (size) {
+            if (!size) return empty
             let result = (size / 1024)
             if (result < 1024) {
                 return result.toFixed(2) + ' KB'

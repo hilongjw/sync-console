@@ -76,7 +76,7 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            list: [] // this.$syncConsole.netWorkQueue.slice()
+            list: []
         }
     },
     components: {
@@ -97,9 +97,8 @@ export default {
                 }
             })
             .then(() => {
-                console.info('reported')
+                this.$snack('report success')
             })
-            this.$snack('report success')
         },
         clear () {
             this.$syncConsole.netWorkQueue = []
