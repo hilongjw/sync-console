@@ -6,7 +6,7 @@
 
 <template>
     <div class="rd-console-view rd-console-element">
-        <DOMViewer :data="data"></DOMViewer>
+        <DOMViewer :data="element"></DOMViewer>
     </div>
 </template>
 
@@ -17,28 +17,21 @@ export default {
     data () {
         return {
             timer: null,
-            data: null,
-            elementNode: {
-                tag: '',
-                attrs: [],
-                children: []
-            }
+            element: this.$syncConsole.element
         }
     },
     components: {
         DOMViewer
     },
     mounted () {
-        this.timer = setInterval(() => {
-            this.parseNode()
-        }, 50)
+        this.$syncConsole.$on('update-element', this.updateElement)
     },
     beforeDestroy () {
-        clearInterval(this.timer)
+        this.$syncConsole.$off('update-element', this.updateElement)
     },
     methods: {
-        parseNode () {
-            this.data = document.querySelector('html')
+        updateElement (element) {
+            this.element = element
         }
     }
 }

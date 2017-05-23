@@ -85,8 +85,9 @@
 import clipboard from 'clipboard-js'
 
 function cookieParse (str) {
+    if (!str) return []
     let tmp = []
-    return document.cookie.split(';').map(item => {
+    return str.split(';').map(item => {
         tmp = item.split('=')
         return {
             key: tmp[0],

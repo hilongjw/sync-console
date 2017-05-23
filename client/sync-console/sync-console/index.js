@@ -7,6 +7,8 @@ import SystemInfo from './system'
 import TraceKit from './trace-kit'
 import History from './history'
 
+import { parseNode } from '../lib/dom-parse'
+
 TraceKit.collectWindowErrors = false
 
 class SyncConsole extends Event {
@@ -15,6 +17,8 @@ class SyncConsole extends Event {
         this.options = options
 
         this.remoteMode = false
+        this.clientMode = true
+
         this._history = new History(this.options)
 
         this.logQueue = []
@@ -25,6 +29,9 @@ class SyncConsole extends Event {
         this.mockConsole = null
         this.mockNetWork = null
         this.mockError = null
+
+        this.elementTimer = null
+        this.element = null
 
         this.scoketClient = null
 
@@ -53,9 +60,32 @@ class SyncConsole extends Event {
             system: this.system
         }
 
+        this.initElement()
+
         if (this.options._sync_console_remote) {
             this.initClient()
         }
+    }
+
+    initElement () {
+        let index = 0
+        this.elementTimer = setInterval(() => {
+            index++
+            this.element = parseNode(document.querySelector('html'))
+            this.$emit('update-element', this.element)
+
+            // TODO diff and real-time
+            if (index % 20 === 0) {
+                this.uploadSyncData({
+                    element: this.element
+                })
+            }
+        }, 50)
+    }
+
+    updateElement (element) {
+        this.element = element
+        this.$emit('update-element', this.element)
     }
 
     initConsole (options) {
@@ -67,7 +97,8 @@ class SyncConsole extends Event {
         this.historyQueue.push(log)
         this.logQueue.push(log)
         this.$emit('update-log', log)
-        this.scoketClient && this.scoketClient.$emit('ask-update', {
+
+        this.uploadSyncData({
             log: log
         })
     }
@@ -90,7 +121,8 @@ class SyncConsole extends Event {
             this.netWorkQueue.push(net)
         }
         this.$emit('update-net', net)
-        this.scoketClient && this.scoketClient.$emit('ask-update', {
+
+        this.uploadSyncData({
             net: net
         })
     }
@@ -111,6 +143,7 @@ class SyncConsole extends Event {
             .then(() => {
                 this.scoketClient.$on('ask-data', (cb) => {
                     cb(null, {
+                        element: this.element,
                         system: this.system,
                         logQueue: this.logQueue,
                         historyQueue: this.historyQueue,
@@ -123,6 +156,7 @@ class SyncConsole extends Event {
                     this.logQueue = data.logQueue || []
                     this.historyQueue = data.historyQueue || []
                     this.netWorkQueue = data.netWorkQueue || []
+                    this.element = data.element || {}
 
                     this.$emit('init-log', this.logQueue)
                     this.$emit('init-net', this.netWorkQueue)
@@ -136,6 +170,9 @@ class SyncConsole extends Event {
                     if (data.net) {
                         this.updateNetWrok(data.net)
                     }
+                    if (data.element) {
+                        this.updateElement(data.element)
+                    }
                 })
 
                 this.scoketClient.$on('run-code', code => {
@@ -144,6 +181,7 @@ class SyncConsole extends Event {
 
                 this.scoketClient.$on('remote-mode', () => {
                     this.remoteSync = true
+                    clearInterval(this.elementTimer)
                 })
 
                 this.scoketClient.$on('init-clients', () => {
@@ -163,8 +201,14 @@ class SyncConsole extends Event {
             })
     }
 
+    uploadSyncData (data) {
+        if (!this.clientMode) return
+        this.scoketClient && this.scoketClient.$emit('ask-update', data)
+    }
+
     setRemoteMode () {
         this.remoteMode = true
+        this.clientMode = false
         this.scoketClient.remoteMode()
     }
 
@@ -187,6 +231,7 @@ class SyncConsole extends Event {
     }
 
     remove () {
+        this.clearInterval(this.elementTimer)
         this.removeClient()
     }
 }

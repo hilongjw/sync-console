@@ -1,4 +1,6 @@
 import { getParams } from './utils'
+import MockConsole from './sync-console/mock-console'
+import History from './sync-console/history'
 
 const defaultOptions = {
     maxLogCount: 50,
@@ -16,10 +18,12 @@ class SyncConsoleManager {
         this.state = {
             clickCount: 0
         }
+        this.mockConsole = null
 
         if (this.options.el) this.mount(this.options.el)
 
         this.check()
+        this.initLogHistory(this.options)
     }
 
     mount (selector) {
@@ -33,14 +37,44 @@ class SyncConsoleManager {
         el.addEventListener('click', this.clickMark.bind(this))
     }
 
+    initLogHistory (options) {
+        this.history = new History(options)
+        this.mockConsole = new MockConsole({
+            methods: options.consoleMethods
+        })
+
+        this.mockConsole.$on('new', log => {
+            this.history.queue.push(log)
+            this.history.save()
+        })
+    }
+
+    destroyLogHistory () {
+        if (this.mockConsole) {
+            this.mockConsole.destroy()
+            this.mockConsole = null
+        }
+        if (this.history) {
+            this.history.destroy()
+            this.history = null
+        }
+    }
+
     // async load sync console core
     initSyncConsole () {
-        if (this.syncConsole) return Promise.resolve()
+        if (this.syncConsole) {
+            this.destroyLogHistory()
+            return Promise.resolve()
+        }
         return import('./sync-console')
             .then(module => {
                 const SyncConsole = module.default
+                this.destroyLogHistory()
                 this.syncConsole = new SyncConsole(this.options)
                 return this.syncConsole
+            })
+            .catch(err => {
+                console.error(err)
             })
     }
 

@@ -9,11 +9,14 @@ class MockConsole extends Event {
             methods: options.methods || ['log', 'warn', 'info', 'error']
         }
         this.logIndex = 0
-        this.mockConsole(this.options.methods)
+        this.oldMethodMap = {}
+        this.mockConsole()
     }
 
-    mockConsole (methods) {
+    mockConsole () {
+        const methods = this.options.methods
         methods.map(method => {
+            this.oldMethodMap[method] = console[method]
             let old = console[method]
             let vm = this
 
@@ -34,6 +37,14 @@ class MockConsole extends Event {
                 old.apply(console, args)
             }
         })
+    }
+
+    destroy () {
+        const methods = this.options.methods
+        methods.map(method => {
+            console[method] = this.oldMethodMap[method]
+        })
+        this.oldMethodMap = {}
     }
 }
 

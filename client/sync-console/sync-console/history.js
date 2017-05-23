@@ -4,7 +4,7 @@ export default class History {
     constructor ({ maxLogCount }) {
         this.queue = this.load()
         this.maxLogCount = maxLogCount || 30
-
+        this._onbeforeunload = null
         this.mockQueuePush()
         this.onCloseSave()
     }
@@ -21,12 +21,18 @@ export default class History {
         }
     }
 
+    offCloseSave () {
+        if (isFunction(this._onbeforeunload)) {
+            window.onbeforeunload = this._onbeforeunload
+        }
+    }
+
     onCloseSave () {
-        const _onbeforeunload = window.onbeforeunload
+        this._onbeforeunload = window.onbeforeunload
         window.onbeforeunload = () => {
             this.save()
-            if (isFunction(_onbeforeunload)) {
-                _onbeforeunload()
+            if (isFunction(this._onbeforeunload)) {
+                this._onbeforeunload()
             }
         }
     }
@@ -48,5 +54,10 @@ export default class History {
         }
 
         return queue
+    }
+
+    destroy () {
+        this.offCloseSave()
+        this.queue = []
     }
 }

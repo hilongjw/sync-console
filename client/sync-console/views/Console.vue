@@ -69,7 +69,7 @@ export default {
             $list: null,
             type: '',
             typeList: [{
-                text: 'all',
+                text: 'verbose',
                 key: '',
                 active: true
             }],
