@@ -24,20 +24,20 @@ import { parseNode, isDOM } from '../lib/dom-parse'
 import { getType } from '../utils'
 
 function renderAttrs (h, node) {
-    if (!node || !node.attrs || !node.attrs.length) return ''
-    return node.attrs.map(item => {
+    if (!node || !node.props) return ''
+    return Object.keys(node.props).map(key => {
         return <span>
-        {' '}<span class="rd-console-dom-v-attr-key">{item.key}</span>
+        {' '}<span class="rd-console-dom-v-attr-key">{key}</span>
         <span class="rd-console-dom-v-attr-gray">{'="'}</span>
-        <span class="rd-console-dom-v-attr-val">{ item.val }</span>
+        <span class="rd-console-dom-v-attr-val">{ node.props[key] }</span>
         <span class="rd-console-dom-v-attr-gray">{'"'}</span>
         </span>
     })
 }
 
 function renderTag (h, node, fold) {
-    if (typeof node === 'string') return node
     if (!node) return
+    if (node.type && node.type === 'string') return node.content
     if (node.type && node.type === 'comment') return <span class="rd-console-dom-v-comment">{`<!-- ${node.children} -->`}</span>
 
     const startTag = <span class="rd-console-dom-v-tag-name">

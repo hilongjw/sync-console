@@ -7,7 +7,7 @@ import SystemInfo from './system'
 import TraceKit from './trace-kit'
 import History from './history'
 
-import { parseNode } from '../lib/dom-parse'
+import { parseNode, diffElement, patchElement } from '../lib/dom-parse'
 
 TraceKit.collectWindowErrors = false
 
@@ -68,18 +68,32 @@ class SyncConsole extends Event {
     }
 
     initElement () {
-        let index = 0
+        this.element = {
+            key: 1,
+            index: 0,
+            is_SCONSOLE_DOM: true,
+            tag: 'html',
+            props: {},
+            children: [] // [ /*<String>*/ /* <Node> */ ]
+        } // parseNode(document.querySelector('html'))
+
         this.elementTimer = setInterval(() => {
-            index++
-            this.element = parseNode(document.querySelector('html'))
+            let element = parseNode(document.querySelector('html'))
+
+            const patches = diffElement(element, this.element)
+
+            patchElement(this.element, patches)
+
             this.$emit('update-element', this.element)
 
+            if (!Object.keys(patches).length) return
+            console.debug((JSON.stringify(patches).length / 1024).toFixed(2) + ' KB')
             // TODO diff and real-time
-            if (index % 20 === 0) {
-                this.uploadSyncData({
-                    element: this.element
-                })
-            }
+            // if (index % 2 === 0) {
+            //     this.uploadSyncData({
+            //         element: this.element
+            //     })
+            // }
         }, 50)
     }
 
