@@ -6,13 +6,6 @@
 
 ```html
 <script src="https://sync-console-fe.luojilab.com/client/sync-console.js"></script>
-
-<script>
-var syncConsoleManager = new SyncConsoleManager({
-    project: 'some_project_name',
-    server: 'https://sync-console-fe.luojilab.com/'
-})
-</script>
 ```
 
 ```bash
@@ -27,7 +20,6 @@ import SyncConsoleManager from 'sync-console'
 
 var syncConsoleManager = new SyncConsoleManager({
     project: 'some_project_name',
-    server: 'https://sync-console-fe.luojilab.com/',
     Vue: Vue
 })
 ```
