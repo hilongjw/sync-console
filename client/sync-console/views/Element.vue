@@ -17,7 +17,7 @@ export default {
     data () {
         return {
             timer: null,
-            element: this.$syncConsole.element
+            element: JSON.parse(JSON.stringify(this.$syncConsole.element))
         }
     },
     components: {
@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         updateElement (element) {
-            this.element = element
+            this.element = JSON.parse(JSON.stringify(element))
         }
     }
 }

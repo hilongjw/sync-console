@@ -43,13 +43,15 @@ function applyPatches (node, currentPatches) {
     })
 }
 
-function setProps (node, propsPatch) {
-    propsPatch.add.map(prop => {
-        node.props[prop.key] = prop.val
-    })
-    propsPatch.remove.map(key => {
-        delete node.props[key]
-    })
+function setProps (node, propsPatches) {
+    let key
+    for (key in propsPatches) {
+        if (propsPatches[key] === undefined) {
+            delete node.props[key]
+        } else {
+            node.props[key] = propsPatches[key]
+        }
+    }
 }
 
 function reorderChildren (node, moves) {

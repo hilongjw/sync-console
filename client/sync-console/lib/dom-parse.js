@@ -94,42 +94,32 @@ function treeWalker (newNode, oldNode, patches) {
 }
 
 function diffProps (oldNode, newNode) {
-    let change = false
-    let oldProps = oldNode.props || {}
-    let newProps = newNode.props || {}
+    var count = 0
+    var oldProps = oldNode.props || {}
+    var newProps = newNode.props || {}
 
-    let key
-    let propsPatches = {
-        add: [],
-        remove: []
-    }
+    var key, value
+    var propsPatches = {}
 
     for (key in oldProps) {
-        if (!newProps.hasOwnProperty(key)) {
-            change = true
-            propsPatches.remove.push(key)
-        } else {
-            if (oldProps[key] !== newProps[key]) {
-                change = true
-                propsPatches.add.push({
-                    key: key,
-                    val: newProps[key]
-                })
-            }
+        value = oldProps[key]
+        if (newProps[key] !== value) {
+            count++
+            propsPatches[key] = newProps[key]
         }
     }
 
     for (key in newProps) {
+        value = newProps[key]
         if (!oldProps.hasOwnProperty(key)) {
-            change = true
-            propsPatches.add.push({
-                key: key,
-                val: newProps[key]
-            })
+            count++
+            propsPatches[key] = newProps[key]
         }
     }
 
-    if (!change) return null
+    if (count === 0) {
+        return null
+    }
 
     return propsPatches
 }
@@ -153,12 +143,9 @@ export function diffElement (newTree, oldTree) {
 
     treeWalker(newTree, oldTree, patches)
 
-    console.log(patches)
-
     return patches
 }
 
 export function patchElement (node, patches) {
     patch(node, patches)
-    return node
 }

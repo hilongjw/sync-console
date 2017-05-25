@@ -18,6 +18,7 @@ class SyncConsole extends Event {
 
         this.remoteMode = false
         this.clientMode = true
+        this.connecting = false
 
         this._history = new History(this.options)
 
@@ -68,33 +69,34 @@ class SyncConsole extends Event {
     }
 
     initElement () {
-        this.element = {
-            key: 1,
-            index: 0,
-            is_SCONSOLE_DOM: true,
-            tag: 'html',
-            props: {},
-            children: [] // [ /*<String>*/ /* <Node> */ ]
-        } // parseNode(document.querySelector('html'))
+        this.element = parseNode(document.querySelector('html'))
+        let element
+        let patches
 
-        this.elementTimer = setInterval(() => {
-            let element = parseNode(document.querySelector('html'))
+        setInterval(() => {
+            if (this.remoteMode) return
+            element = parseNode(document.querySelector('html'))
+            if (!this.connecting) {
+                this.element = element
+                this.$emit('update-element', this.element)
+            } else {
+                patches = diffElement(element, this.element)
+                this.patchElement(patches)
+            }
+        }, 500)
+    }
 
-            const patches = diffElement(element, this.element)
+    patchElement (patches) {
+        if (!Object.keys(patches).length) return
+        patchElement(this.element, patches)
 
-            patchElement(this.element, patches)
+        if (this.clientMode) {
+            this.uploadSyncData({
+                elementPatches: patches
+            })
+        }
 
-            this.$emit('update-element', this.element)
-
-            if (!Object.keys(patches).length) return
-            console.debug((JSON.stringify(patches).length / 1024).toFixed(2) + ' KB')
-            // TODO diff and real-time
-            // if (index % 2 === 0) {
-            //     this.uploadSyncData({
-            //         element: this.element
-            //     })
-            // }
-        }, 50)
+        this.$emit('update-element', this.element)
     }
 
     updateElement (element) {
@@ -156,6 +158,7 @@ class SyncConsole extends Event {
         return this.scoketClient.init()
             .then(() => {
                 this.scoketClient.$on('ask-data', (cb) => {
+                    this.connecting = true
                     cb(null, {
                         element: this.element,
                         system: this.system,
@@ -166,6 +169,8 @@ class SyncConsole extends Event {
                 })
 
                 this.scoketClient.$on('init', data => {
+                    this.remoteMode = true
+
                     this.system = data.system || {}
                     this.logQueue = data.logQueue || []
                     this.historyQueue = data.historyQueue || []
@@ -175,6 +180,9 @@ class SyncConsole extends Event {
                     this.$emit('init-log', this.logQueue)
                     this.$emit('init-net', this.netWorkQueue)
                     this.$emit('init-history', this.historyQueue)
+                    this.$emit('update-element', data.element)
+
+                    this.updateElement(data.element)
                 })
 
                 this.scoketClient.$on('update', data => {
@@ -186,6 +194,9 @@ class SyncConsole extends Event {
                     }
                     if (data.element) {
                         this.updateElement(data.element)
+                    }
+                    if (data.elementPatches) {
+                        this.patchElement(data.elementPatches)
                     }
                 })
 
@@ -216,7 +227,7 @@ class SyncConsole extends Event {
     }
 
     uploadSyncData (data) {
-        if (!this.clientMode) return
+        if (!this.clientMode && !this.connecting) return
         this.scoketClient && this.scoketClient.$emit('ask-update', data)
     }
 

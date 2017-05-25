@@ -109,21 +109,18 @@ class SocketClient extends Event {
             system: this.system,
             project: this.project
         })
-        console.log('start client mode')
 
         this.client.on('client:sync-req', (data) => {
             // TODO auth check
             this.target = data.target
 
-            console.log('client:sync-req')
-
-            // this.$emit('ask-data', (err, vm) => {
-            //     if (err) return console.error(err)
-            //     this.client.emit('client:sync-init', {
-            //         target: this.target,
-            //         data: vm
-            //     })
-            // })
+            this.$emit('ask-data', (err, vm) => {
+                if (err) return console.error(err)
+                this.client.emit('client:sync-init', {
+                    target: this.target,
+                    data: vm
+                })
+            })
         })
 
         this.$on('ask-update', (vm) => {
